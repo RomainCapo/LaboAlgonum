@@ -12,6 +12,19 @@ function toBinary8(number){
   return tmp;
 }
 
+function fillWith0(binary){
+  let length = binary.length;
+  if(length < MAN)
+  {
+    let step = MAN - length;
+    for(let i = 0; i < step; i++)
+    {
+      binary += '0';
+    }
+  }
+  return binary;
+}
+
 class FloatType {
   constructor(s, e, m){
     this.sMaj = this._getSValue(s);
@@ -116,51 +129,10 @@ class BinaryType{
   constructor(float){
 
     this.sign = this._getSign(float);
-    alert(this.sign);
-    this.exponent = this._getExponent(float);
-    alert(this.exponent);
-    this.mantissa = this._getMantissa(this.fraction);
-    alert(this.mantissa);
 
-    this.binary = this.sign + this.exponent + this.mantissa;
-  }
+    this._transformScientificBase2(float);
 
-  _getMantissa(fraction){
-    let mantissa = '';
-    fraction = this._getDecimal(fraction);
-
-    for(let i = 0; i < MAN; i++)
-    {
-      fraction = fraction * 2;
-
-      if(fraction >= 1)
-      {
-        mantissa += '1';
-      }
-      else
-      {
-        mantissa += '0';
-      }
-
-      fraction = this._getDecimal(fraction);
-    }
-    return mantissa;
-  }
-
-  _getExponent(float){
-      let tmp;
-      let i = 1;
-      do {
-        tmp = float / Math.pow(2,-i)
-        i++;
-      } while (!(tmp >= 1 && tmp < 2));
-
-      this.fraction = tmp;
-      let power = i - 1;
-      power = -1 * power;
-
-      let exponent = power + 127;
-      return toBinary8(exponent);
+    this.binary = this.sign + this.exponent + this.mantissa;//on assemble le nombre binaire dans sa totalité
   }
 
   _getSign(float){
@@ -174,9 +146,99 @@ class BinaryType{
     }
   }
 
+  _ptnDeJsDeMerde(array){
+    let tmp = '';
+    for(let i = 0; i < array.length; i++)
+    {
+      if(array[i] == '0')
+      {
+        tmp+='0';
+      }
+      else
+      {
+        tmp+='1';
+      }
+    }
+    return tmp;
+  }
+
+
+  _transformScientificBase2WithoutShift(float){
+    this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
+    this.fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
+
+    this.fractional2 = ''; //contient les chiffres apres la virgule en base 2
+
+    //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
+    // si la fraction est plus grande que 1 on enleve le chiffre avant la virgule
+    let i = 0;
+    while(this.fractional10 != 0 && i < 100)//100 nombre choisi aléatoirement grand avant de trouver une solution
+    {
+      this.fractional10 = this.fractional10 * 2;
+      if(this.fractional10 >= 1)
+      {
+        this.fractional2 += '1';
+      }
+      else
+      {
+        this.fractional2 += '0';
+      }
+      this.fractional10 = this._getDecimal(this.fractional10);
+      i++;
+    }
+
+    this.number2 = (this.integral2 + '.' + this.fractional2).split('');//nombre en binaire avec la notation scientifique mais non somplifié (2^0)
+  }
+
+  _transformScientificBase2(float){
+    this._transformScientificBase2WithoutShift(float);
+
+    let pointIndex = this.integral2.length;//index du point dans le chiffre
+
+    //on itere dans le nombre jusqu'a trouver un 1, on effectue encore une fois j++ pour se placer juste apres le 1, car c'est ici que l'on veut placer la virgule
+    let j = 0;
+    while(this.number2[j] != 1)
+    {
+      j++;
+    }
+    j++;
+
+    this.mantissa = (this.integral2 + this.fractional2).split('');
+    //si le nombre est plus grand ou egal a 1, on regarde de combien on a décalé la virgule,
+    //pour la mantisse on enleve les 0 inutile et le 1er 1, puis on prends les 23 1er chiffre de la mantise.
+    if(float >= 1)
+    {
+      this.power = pointIndex - j;
+      this.mantissa.splice(0,j);
+      this.mantissa = this.mantissa.splice(0, MAN);
+    }
+    //si le nombre est plus petit que 1, on regarde de combien ona  decalé la virgule (+1 car si le nombre est plus petit que 0 on a compté la virgule dans le calcul et il faut enlever)
+    //pour la mantisse on enleve les 0 inutile et le 1er 1, puis on prends les 23 1er chiffre de la mantise.
+    else if (float < 1)
+    {
+
+      this.power = pointIndex - j + 1;
+      this.mantissa.splice(0, j - 1);
+    }
+
+    this.mantissa = this.mantissa.splice(0, MAN);
+    this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
+
+    this.mantissa = this._ptnDeJsDeMerde(this.mantissa);
+    this.mantissa = fillWith0(this.mantissa);
+
+    console.log("exponent : " + this.exponent);
+    console.log(this.exponent.length);
+    console.log("mantissa : " + this._ptnDeJsDeMerde(this.mantissa));
+    console.log(this.mantissa.length);
+
+
+  }
+
   _getDecimal(number){
-    let tmp = number - Math.floor(number);
-    return tmp.toFixed(2);
+    let string = number.toString();
+    string = string.split(".")[1];
+    return parseFloat("0." + string);
   }
 
   static setCheckBox(binary){
@@ -241,13 +303,18 @@ function onClicEvent(){
 }
 
 function onInputEvent(){
-  alert(BinaryType.getInputValue());
+  let decimal_input = BinaryType.getInputValue();
+  if(!isNaN(decimal_input))
+  {
+    let binary_obj = new BinaryType(decimal_input);
+    BinaryType.setCheckBox(binary_obj.binary);
+  }
+  console.log("isNan");
 }
 
 function debug(){
-  let binary_obj = new BinaryType(0.890625);
-  //alert(binary_obj.binary);
-BinaryType.setCheckBox(binary_obj.binary);
+  let test = new BinaryType(34.890625);
+  console.log("binary number : " + test.binary);
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
