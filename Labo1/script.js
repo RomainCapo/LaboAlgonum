@@ -135,7 +135,9 @@ function generateMantissaCheckbox(){
 }
 
 //http://www.oxfordmathcenter.com/drupal7/node/43
-https://blog.penjee.com/binary-numbers-floating-point-conversion/
+//https://blog.penjee.com/binary-numbers-floating-point-conversion/
+// TODO: le dernier chiffre de la mantisse n'est pas arrondi correctement
+// TODO: refactorisé les fonctions
 class BinaryType{
   constructor(float){
 
@@ -184,7 +186,7 @@ class BinaryType{
     //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
     // si la fraction est plus grande que 1 on enleve le chiffre avant la virgule
     let i = 0;
-    while(this.fractional10 != 0 && i < 100)//100 nombre choisi aléatoirement grand avant de trouver une solution
+    while(this.fractional10 != 0 && i < 100)//100 nombre choisi aléatoirement grand avant de trouver une solution // TODO: ne pas mettre de nombre magique mais calculer a la volée
     {
       this.fractional10 = this.fractional10 * 2;
       if(this.fractional10 >= 1)
@@ -237,7 +239,7 @@ class BinaryType{
     this.mantissa = this.mantissa.splice(0, MAN);
     this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
 
-    this.mantissa = this._ptnDeJsDeMerde(this.mantissa);
+    this.mantissa = this._ptnDeJsDeMerde(this.mantissa);// TODO: conversion automatique et non par fonction
     this.mantissa = fillWith0(this.mantissa);
 
     console.log("exponent : " + this.exponent);
