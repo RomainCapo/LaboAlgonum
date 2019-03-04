@@ -2,6 +2,7 @@ const EXP = 8;
 const MAN = 23;
 const D = 126;
 
+//converti un nombre decimal en base 10 en mettant les 0 nécaissaire devant (00001011), retourne donc tjs un nombre binaire de 8 bits
 function toBinary8(number){
   let tmp = (number).toString(2);
   let length = 8 - tmp.length;
@@ -12,6 +13,7 @@ function toBinary8(number){
   return tmp;
 }
 
+//rempli la mantisse en placant des 0 si les cases ne sont pas rempli
 function fillWith0(binary){
   let length = binary.length;
   if(length < MAN)
@@ -36,6 +38,7 @@ class FloatType {
     this.decimal = this.sMaj * this.mMaj * Math.pow(2, this.e_prime - D);
   }
 
+  //récupère la valeur du signe
   _getSValue(s){
     if(s == '1')
     {
@@ -47,6 +50,7 @@ class FloatType {
     }
   }
 
+  //récupère la valeur de M selon la formule du cours
   _getMValue(m){
     let m_with_hidden_bit = '1' + m;
 
@@ -56,10 +60,12 @@ class FloatType {
     return numerator / denominator;
   }
 
+  //récupère e prime selon la formule du cours
   _getEPrimeValue(e){
       return parseInt(e, 2);
   }
 
+  //récupère la valeur du signe sur le formulaire
   static getSignValue(){
     if(document.getElementById('s1').checked == true)
     {
@@ -71,6 +77,7 @@ class FloatType {
     }
   }
 
+  //récupère la valeur de l'exposant sur le formulaire
   static getExposentValue(){
     let binaryResult = '';
 
@@ -88,6 +95,7 @@ class FloatType {
     return binaryResult;
   }
 
+ //récupère la valeur de la mantisse sur le formulaire
   static getMantissaValue(){
     let binaryResult = '';
 
@@ -106,6 +114,7 @@ class FloatType {
   }
 }
 
+//genere les checkbox pour l'exposant
 function generateExponentCheckbox(){
   let exposant = document.getElementById('exponent');
 
@@ -115,6 +124,7 @@ function generateExponentCheckbox(){
   }
 }
 
+//genere les checkbox pour la mantisse
 function generateMantissaCheckbox(){
   let mantissa = document.getElementById('mantissa');
 
@@ -125,6 +135,7 @@ function generateMantissaCheckbox(){
 }
 
 //http://www.oxfordmathcenter.com/drupal7/node/43
+https://blog.penjee.com/binary-numbers-floating-point-conversion/
 class BinaryType{
   constructor(float){
 
@@ -135,6 +146,7 @@ class BinaryType{
     this.binary = this.sign + this.exponent + this.mantissa;//on assemble le nombre binaire dans sa totalité
   }
 
+  //recupère le signe de la valeur passé en parametre
   _getSign(float){
     if(float.toString()[0] == '-')
     {
@@ -162,7 +174,7 @@ class BinaryType{
     return tmp;
   }
 
-
+  //converti le nombre passé en parametre en notation scientifique sans décalage donc (2^0)
   _transformScientificBase2WithoutShift(float){
     this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
     this.fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
@@ -190,6 +202,7 @@ class BinaryType{
     this.number2 = (this.integral2 + '.' + this.fractional2).split('');//nombre en binaire avec la notation scientifique mais non somplifié (2^0)
   }
 
+  //converti la notation scientifique base 2 sans décalage en notation avec décalage, calcule la mantisse et l'exposant
   _transformScientificBase2(float){
     this._transformScientificBase2WithoutShift(float);
 
@@ -235,12 +248,14 @@ class BinaryType{
 
   }
 
+  //récupére les chiffres apres la virgule du nombre passé en parametre (si nombre < 1 par exemple 0.5 retourne 0.5)
   _getDecimal(number){
     let string = number.toString();
     string = string.split(".")[1];
     return parseFloat("0." + string);
   }
 
+  //permet de remplir ou non les checkboxs (attention le nombre passé en parametre doit etre de longeur 32)
   static setCheckBox(binary){
     if(binary.length == 32)
     {
@@ -291,17 +306,20 @@ class BinaryType{
     }
   }
 
+  //permet de recupèrer la valeur de l'input
   static getInputValue(){
     return parseFloat(document.getElementById('decimal').value);
   }
 }
 
+//lors du clic sur une checkbox on effectue la conversion binaire -> decimal et on met a jour dans l'input de type text
 function onClicEvent(){
   let decimal_input = document.getElementById('decimal');
   let decimal_obj = new FloatType(FloatType.getSignValue(), FloatType.getExposentValue(), FloatType.getMantissaValue());
   decimal_input.value = decimal_obj.decimal;
 }
 
+//lors du chanegement d'etat de l'input on converti le nombre courant en decimal -> binaire et on met a jour les checkboxs
 function onInputEvent(){
   let decimal_input = BinaryType.getInputValue();
   if(!isNaN(decimal_input))
@@ -316,6 +334,7 @@ function debug(){
   let test = new BinaryType(34.890625);
   console.log("binary number : " + test.binary);
 }
+
 
 document.addEventListener("DOMContentLoaded", function(event) {
   generateExponentCheckbox();
