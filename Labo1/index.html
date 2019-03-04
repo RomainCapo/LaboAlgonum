@@ -5,38 +5,77 @@
     <meta charset="utf-8" />
     <title>Labo 1</title>
     <link rel="stylesheet" href="/theme/css/base.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style media="screen">
     table, th, td {
-border: 1px solid black;
-}
-    </style>
+      border: 1px solid black;
+    }
+  </style>
   </head>
-  <h1>Algorithme numérique - Labo 1</h1>
-  <p>Auteurs:</p>
-      <ul>
-        <li>Romain Capocasale</li>
-        <li>Vincent Moulin</li>
-        <li>Loïc Jurasz</li>
-      </ul>
   <body>
-    <input type="text" id="decimal" oninput="onInputEvent()"><br/><br/>
-    <table>
-      <thead>
-        <tr>
-          <th>Signe</th>
-          <th>Exposant</th>
-          <th>Mantisse</th>
-        </tr>
-      </thead>
-      <tbody>
-        <td id="class"> <input type="checkbox" id="s1"  onclick="onClicEvent()"> </td>
-        <td id="exponent">
-        </td>
-        <td id="mantissa">
-        </td>
-      </tbody>
-    </table>
-    <button type="button" id="debug" onclick="debug()">Debug</button>
+    <div class="container">
+      <br>
+      <br>
+      <h1>Algorithme numérique - Labo 1</h1>
+      <p>Auteurs:</p>
+          <ul>
+            <li>Romain Capocasale</li>
+            <li>Vincent Moulin</li>
+            <li>Loïc Jurasz</li>
+          </ul>
+      <hr>
+      <h2># Partie 1 - Conversion bidirectionnelle</h2>
+      <input type="text" id="decimal" oninput="onInputEvent()"><br/><br/>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Exposant</th>
+            <th>Mantisse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <td id="class"> <input type="checkbox" id="s1"  onclick="onClicEvent()"> </td>
+          <td id="exponent">
+          </td>
+          <td id="mantissa">
+          </td>
+        </tbody>
+      </table>
+      <button type="button" id="debug" onclick="debug()">Debug</button>
+      <hr>
+      <h2># Partie 2 - Bonus</h2>
+
+      <!--TODO addition et soustraction -->
+
+      <h4>Multiplication (A*B)</h4>
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="text" id="a_multiplication" class="form-control" placeholder="A">
+          <span>&nbsp;&nbsp;*&nbsp;&nbsp;</span>
+          <input type="text" id="b_multiplication" class="form-control" placeholder="B">
+        </div>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" class="btn btn-primary" onclick="multiplication()"> = </button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <span id="multiplication"></span>
+      </div>
+
+      <h4>Division (A/B)</h4>
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="text" id="a_division" class="form-control" placeholder="A">
+          <span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+          <input type="text" id="b_division" class="form-control" placeholder="B">
+        </div>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" class="btn btn-primary" onclick="division()"> = </button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <span id="division"></span>
+      </div>
+
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>
