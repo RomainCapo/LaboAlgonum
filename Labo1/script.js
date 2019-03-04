@@ -321,3 +321,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
   generateExponentCheckbox();
   generateMantissaCheckbox();
 });
+
+
+// Multiplication
+
+function multiplication() {
+  let a = document.getElementById('a_multiplication').value;
+  let b = document.getElementById('b_multiplication').value;
+
+  document.getElementById('multiplication').innerHTML = a*b;
+}
+
+// Division
+
+function division() {
+  let a = document.getElementById('a_division').value;
+  let b = document.getElementById('b_division').value;
+
+  document.getElementById('division').innerHTML = a/b;
+}
