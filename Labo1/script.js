@@ -234,7 +234,7 @@ class BinaryType{
   //converti le nombre passé en parametre en notation scientifique sans décalage donc (2^0)
   _transformScientificBase2WithoutShift(float){
     this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
-    this.fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
+    let fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
 
 
     this.fractional2 = ''; //contient les chiffres apres la virgule en base 2
@@ -244,10 +244,10 @@ class BinaryType{
     let i = 0;
     //127 + 23 permet de ne perdre aucune précision, en effet si on prends le cas extreme qui serait un nombre entre -1 et 1 tres tres petit, le nombre de décalage maximum
     //serait de 127 etant donné que l'exposant = 127 + décalge, apres 127 décalge il faut encore récupérer la valeur de mantisse donc 23 bit.
-    while(this.fractional10 != 0 && i < 127 + MAN)
+    while(fractional10 != 0 && i < 127 + MAN)
     {
-      this.fractional10 = this.fractional10 * 2;
-      if(this.fractional10 >= 1)
+      fractional10 = fractional10 * 2;
+      if(fractional10 >= 1)
       {
         this.fractional2 += '1';
       }
@@ -255,7 +255,7 @@ class BinaryType{
       {
         this.fractional2 += '0';
       }
-      this.fractional10 = this._getDecimal(this.fractional10);
+      fractional10 = this._getDecimal(fractional10);
       i++;
     }
 
@@ -294,14 +294,7 @@ class BinaryType{
     }
     this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
 
-    this.mantissa = this.mantissa.splice(0, MAN);//on prends les 23 premier bit de la mantisse
-    this.mantissa = this.mantissa.join("");//on converti le tableau en string
-    this.mantissa = fillWith0(this.mantissa);//on remplie la droite de la mantisse avec des 0
-
-    console.log("exponent : " + this.exponent);
-    console.log(this.exponent.length);
-    //console.log(this.mantissa.join(""));
-    console.log(this.mantissa.length);
+    this.mantissa = fillWith0(this.mantissa.splice(0, MAN).join(""));//on prends les 23 premier bit de la mantisse[splice()], on converti le tableau en string[join()], on remplie la droite de la mantisse avec des 0[fillWith0()]
   }
 
   //récupére les chiffres apres la virgule du nombre passé en parametre (si nombre < 1 par exemple 0.5 retourne 0.5)
