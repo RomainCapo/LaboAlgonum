@@ -27,16 +27,41 @@ function fillWith0(binary){
   return binary;
 }
 
-// TODO: implémenter type special isNaN, Infinity, - Infinity
 class FloatType {
   constructor(s, e, m){
-    this.sMaj = this._getSValue(s);
 
-    this.e_prime = this._getEPrimeValue(e);
+    //selon la norme IEEE 754 il peut y avoir plusieurs cas particulier,qu'il faut traiter
+    // si le signe vaut 0, l'exposant 0 et la mantisse 0 alors le chiffre vaut 'Zero'
+    if(s == '0' && e == toBinary8(0) && m == fillWith0(''))
+    {
+      this.decimal = "Zero";
+    }
+    //si le signe vaut 0, tout les bits de l'exposant sont à 1 et la mantisse à 0, le nombre correponds à l'infini
+    else if (s == '0' && e == '11111111' && m == fillWith0(''))
+    {
+      this.decimal = "Infinity";
+    }
+    //si le signe vaut 1, tout les bits de l'exposant sont à 1 et la mantisse à 0, le nombre correponds à l'infini
+    else if (s == '1' && e == '11111111' && m == fillWith0(''))
+    {
+      this.decimal = "-Infinity";
+    }
+    //si le signe vaut 0, tout les bits de l'exposant sont à 1 et la mantisse à 0 sauf le bit tout a gauche, la valeur entrée n'est pas un nombre
+    else if (s == '0' && e == '11111111' && m == fillWith0('1'))
+    {
+      this.decimal = "NaN";
+    }
+    // si c'est aucun des cas au dessus on effectue le traitement habituel
+    else
+    {
+      this.sMaj = this._getSValue(s);
 
-    this.mMaj = this._getMValue(m);
+      this.e_prime = this._getEPrimeValue(e);
 
-    this.decimal = this.sMaj * this.mMaj * Math.pow(2, this.e_prime - D);
+      this.mMaj = this._getMValue(m);
+
+      this.decimal = this.sMaj * this.mMaj * Math.pow(2, this.e_prime - D);
+    }
   }
 
   //récupère la valeur du signe
@@ -137,16 +162,60 @@ function generateMantissaCheckbox(){
 
 //http://www.oxfordmathcenter.com/drupal7/node/43
 //https://blog.penjee.com/binary-numbers-floating-point-conversion/
-// TODO: le dernier chiffre de la mantisse n'est pas arrondi correctement
 // TODO: refactorisé les fonctions
-// TODO: traitement des valeurs d'entree pour eviter les erreur (isNaN(), ...)
 class BinaryType{
   constructor(float){
 
-    this.sign = this._getSign(float);
-
-    this._transformScientificBase2(float);
-
+    //selon la norme IEEE 754 il peut y avoir plusieurs cas particulier,qu'il faut traiter
+    //si le champs vaut 'Zero' tout les bits valent 0
+    if(float == "Zero" || parseFloat(float) == 0)
+    {
+      console.log('zero');
+      this.sign = '0';
+      this.exponent = toBinary8(0);
+      this.mantissa = fillWith0('');
+    }
+    //si le champs vaut 'Infinity', bit du signe à 0, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0
+    else if (float == "Infinity")
+    {
+      console.log('Infinity');
+      this.sign = '0';
+      this.exponent = '11111111';
+      this.mantissa = fillWith0('');
+    }
+    //si le champs vaut '-Infinity', bit du signe à 1, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0
+    else if (float == "-Infinity")
+    {
+      console.log('-Infinity');
+      this.sign = '1';
+      this.exponent = '11111111';
+      this.mantissa = fillWith0('');
+    }
+    //si le champs vaut 'Nan' qui signie Not a Number, bit du signe à 0, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0 sauf le 1er
+    else if (float == "NaN")
+    {
+      console.log('Nan');
+      this.sign = '0';
+      this.exponent = '11111111';
+      this.mantissa = fillWith0('1');
+    }
+    // si c'est aucun des cas au dessus on effectue le traitement habituel
+    else
+    {
+      float = parseFloat(float)
+      if(!isNaN(float))
+      {
+        console.log(float);
+        this.sign = this._getSign(float);
+        this._transformScientificBase2(float);
+      }
+      else
+      {
+        this.sign = '0';
+        this.exponent = '11111111';
+        this.mantissa = fillWith0('1');
+      }
+    }
     this.binary = this.sign + this.exponent + this.mantissa;//on assemble le nombre binaire dans sa totalité
   }
 
@@ -167,12 +236,15 @@ class BinaryType{
     this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
     this.fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
 
+
     this.fractional2 = ''; //contient les chiffres apres la virgule en base 2
 
     //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
     // si la fraction est plus grande que 1 on enleve le chiffre avant la virgule
     let i = 0;
-    while(this.fractional10 != 0 && i < 100)//100 nombre choisi aléatoirement grand avant de trouver une solution // TODO: ne pas mettre de nombre magique mais calculer a la volée
+    //127 + 23 permet de ne perdre aucune précision, en effet si on prends le cas extreme qui serait un nombre entre -1 et 1 tres tres petit, le nombre de décalage maximum
+    //serait de 127 etant donné que l'exposant = 127 + décalge, apres 127 décalge il faut encore récupérer la valeur de mantisse donc 23 bit.
+    while(this.fractional10 != 0 && i < 127 + MAN)
     {
       this.fractional10 = this.fractional10 * 2;
       if(this.fractional10 >= 1)
@@ -205,16 +277,17 @@ class BinaryType{
     j++;
 
     this.mantissa = (this.integral2 + this.fractional2).split('');
-    //si le nombre est plus grand ou egal a 1, on regarde de combien on a décalé la virgule,
+    //si le nombre n'est pas compris entre -1 et 1, on regarde de combien on a décalé la virgule,
     //pour la mantisse on enleve les 0 inutile et le 1er 1
-    if(float >= 1)
+    if(float <= -1 || float >= 1)
     {
       this.power = pointIndex - j;
       this.mantissa.splice(0,j);
     }
-    //si le nombre est plus petit que 1, on regarde de combien ona  decalé la virgule (+1 car si le nombre est plus petit que 0 on a compté la virgule dans le calcul et il faut enlever)
+    //si le nombre est compris entre -1 et 1, on regarde de combien on a  decalé la virgule
+    //(+1 car si le nombre est comrpis entre - 1 et 1 on a compté la virgule dans le calcul et il faut enlever)
     //pour la mantisse on enleve les 0 inutile et le 1er 1
-    else if (float < 1)
+    else
     {
       this.power = pointIndex - j + 1;
       this.mantissa.splice(0, j - 1);
@@ -225,10 +298,10 @@ class BinaryType{
     this.mantissa = this.mantissa.join("");//on converti le tableau en string
     this.mantissa = fillWith0(this.mantissa);//on remplie la droite de la mantisse avec des 0
 
-    /*console.log("exponent : " + this.exponent);
+    console.log("exponent : " + this.exponent);
     console.log(this.exponent.length);
-    console.log(this.mantissa.join(""));
-    console.log(this.mantissa.length);*/
+    //console.log(this.mantissa.join(""));
+    console.log(this.mantissa.length);
   }
 
   //récupére les chiffres apres la virgule du nombre passé en parametre (si nombre < 1 par exemple 0.5 retourne 0.5)
@@ -291,7 +364,7 @@ class BinaryType{
 
   //permet de recupèrer la valeur de l'input
   static getInputValue(){
-    return parseFloat(document.getElementById('decimal').value);
+    return document.getElementById('decimal').value;
   }
 }
 
@@ -305,12 +378,9 @@ function onClicEvent(){
 //lors du chanegement d'etat de l'input on converti le nombre courant en decimal -> binaire et on met a jour les checkboxs
 function onInputEvent(){
   let decimal_input = BinaryType.getInputValue();
-  if(!isNaN(decimal_input))
-  {
+
     let binary_obj = new BinaryType(decimal_input);
     BinaryType.setCheckBox(binary_obj.binary);
-  }
-  console.log("isNan");
 }
 
 function debug(){
