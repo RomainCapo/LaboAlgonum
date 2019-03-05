@@ -160,22 +160,6 @@ class BinaryType{
     }
   }
 
-  _ptnDeJsDeMerde(array){
-    let tmp = '';
-    for(let i = 0; i < array.length; i++)
-    {
-      if(array[i] == '0')
-      {
-        tmp+='0';
-      }
-      else
-      {
-        tmp+='1';
-      }
-    }
-    return tmp;
-  }
-
   //converti le nombre passé en parametre en notation scientifique sans décalage donc (2^0)
   _transformScientificBase2WithoutShift(float){
     this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
@@ -239,13 +223,13 @@ class BinaryType{
     this.mantissa = this.mantissa.splice(0, MAN);
     this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
 
-    this.mantissa = this._ptnDeJsDeMerde(this.mantissa);// TODO: conversion automatique et non par fonction
+    this.mantissa = this.mantissa.join("");
     this.mantissa = fillWith0(this.mantissa);
 
-    console.log("exponent : " + this.exponent);
+    /*console.log("exponent : " + this.exponent);
     console.log(this.exponent.length);
-    console.log("mantissa : " + this._ptnDeJsDeMerde(this.mantissa));
-    console.log(this.mantissa.length);
+    console.log(this.mantissa.join(""));
+    console.log(this.mantissa.length);*/
 
 
   }
