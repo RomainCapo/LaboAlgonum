@@ -27,6 +27,7 @@ function fillWith0(binary){
   return binary;
 }
 
+// TODO: implémenter type special isNaN, Infinity, - Infinity
 class FloatType {
   constructor(s, e, m){
     this.sMaj = this._getSValue(s);
@@ -138,6 +139,7 @@ function generateMantissaCheckbox(){
 //https://blog.penjee.com/binary-numbers-floating-point-conversion/
 // TODO: le dernier chiffre de la mantisse n'est pas arrondi correctement
 // TODO: refactorisé les fonctions
+// TODO: traitement des valeurs d'entree pour eviter les erreur (isNaN(), ...)
 class BinaryType{
   constructor(float){
 
@@ -204,34 +206,29 @@ class BinaryType{
 
     this.mantissa = (this.integral2 + this.fractional2).split('');
     //si le nombre est plus grand ou egal a 1, on regarde de combien on a décalé la virgule,
-    //pour la mantisse on enleve les 0 inutile et le 1er 1, puis on prends les 23 1er chiffre de la mantise.
+    //pour la mantisse on enleve les 0 inutile et le 1er 1
     if(float >= 1)
     {
       this.power = pointIndex - j;
       this.mantissa.splice(0,j);
-      this.mantissa = this.mantissa.splice(0, MAN);
     }
     //si le nombre est plus petit que 1, on regarde de combien ona  decalé la virgule (+1 car si le nombre est plus petit que 0 on a compté la virgule dans le calcul et il faut enlever)
-    //pour la mantisse on enleve les 0 inutile et le 1er 1, puis on prends les 23 1er chiffre de la mantise.
+    //pour la mantisse on enleve les 0 inutile et le 1er 1
     else if (float < 1)
     {
-
       this.power = pointIndex - j + 1;
       this.mantissa.splice(0, j - 1);
     }
-
-    this.mantissa = this.mantissa.splice(0, MAN);
     this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
 
-    this.mantissa = this.mantissa.join("");
-    this.mantissa = fillWith0(this.mantissa);
+    this.mantissa = this.mantissa.splice(0, MAN);//on prends les 23 premier bit de la mantisse
+    this.mantissa = this.mantissa.join("");//on converti le tableau en string
+    this.mantissa = fillWith0(this.mantissa);//on remplie la droite de la mantisse avec des 0
 
     /*console.log("exponent : " + this.exponent);
     console.log(this.exponent.length);
     console.log(this.mantissa.join(""));
     console.log(this.mantissa.length);*/
-
-
   }
 
   //récupére les chiffres apres la virgule du nombre passé en parametre (si nombre < 1 par exemple 0.5 retourne 0.5)
