@@ -1,27 +1,34 @@
-const EXP = 8;
-const MAN = 23;
-const D = 126;
+var EXP = 8;
+var MAN = 23;
+var D_ = 127;
 
-//converti un nombre decimal en base 10 en mettant les 0 nécaissaire devant (00001011), retourne donc tjs un nombre binaire de 8 bits
-function toBinary8(number){
+//converti un nombre binaire en base 2, le rempli sois de '0' ou de '1' sur la gauche pour avoir un nombre de taille X
+//par exemple : toBinaryX('0', 8, '0') -> '0000000'
+// number : int -> nombre a convertir
+//X : int -> nombre de bit de codage voulu
+//bit : string -> sois '1' sois '0' c'est le bit avec lequel on va remplir les bit manquants
+function toBinaryX(number, X, bit){
   let tmp = (number).toString(2);
-  let length = 8 - tmp.length;
+  let length = X - tmp.length;
   for(let i = 0; i < length; i++)
   {
-    tmp = '0' + tmp;
+    tmp = bit + tmp;
   }
   return tmp;
 }
 
-//rempli la mantisse en placant des 0 si les cases ne sont pas rempli
-function fillWith0(binary){
+//remplie le nombre passé en paramétre avec sois '0' sois '1' jusqua la valeur de la mantisse
+//exemple : toBinaryX('1', '0') -> '10000000000000000000000';
+//binary : string -> nombre a remplir
+//X : sois '1' sois '0' c'est le bit avec lequel on va remplir les bit manquants
+function fillWithX(binary, X){
   let length = binary.length;
   if(length < MAN)
   {
     let step = MAN - length;
     for(let i = 0; i < step; i++)
     {
-      binary += '0';
+      binary += X;
     }
   }
   return binary;
@@ -32,35 +39,36 @@ class FloatType {
 
     //selon la norme IEEE 754 il peut y avoir plusieurs cas particulier,qu'il faut traiter
     // si le signe vaut 0, l'exposant 0 et la mantisse 0 alors le chiffre vaut 'Zero'
-    if(s == '0' && e == toBinary8(0) && m == fillWith0(''))
+    if(s == '0' && e == toBinaryX(0, EXP, '0') && m == fillWithX('', '0'))
     {
       this.decimal = "Zero";
     }
     //si le signe vaut 0, tout les bits de l'exposant sont à 1 et la mantisse à 0, le nombre correponds à l'infini
-    else if (s == '0' && e == '11111111' && m == fillWith0(''))
+    else if (s == '0' && e == toBinaryX(1, EXP, '1') && m == fillWithX('', '0'))
     {
       this.decimal = "Infinity";
     }
     //si le signe vaut 1, tout les bits de l'exposant sont à 1 et la mantisse à 0, le nombre correponds à l'infini
-    else if (s == '1' && e == '11111111' && m == fillWith0(''))
+    else if (s == '1' && e == toBinaryX(1, EXP, '1') && m == fillWithX('', '0'))
     {
       this.decimal = "-Infinity";
     }
     //si le signe vaut 0, tout les bits de l'exposant sont à 1 et la mantisse à 0 sauf le bit tout a gauche, la valeur entrée n'est pas un nombre
-    else if (s == '0' && e == '11111111' && m == fillWith0('1'))
+    else if (s == '0' && e == toBinaryX(1, EXP, '1') && m == fillWithX('', '0'))
     {
       this.decimal = "NaN";
     }
     // si c'est aucun des cas au dessus on effectue le traitement habituel
     else
     {
+      console.log(s + e + m);
       this.sMaj = this._getSValue(s);
 
       this.e_prime = this._getEPrimeValue(e);
 
       this.mMaj = this._getMValue(m);
 
-      this.decimal = this.sMaj * this.mMaj * Math.pow(2, this.e_prime - D);
+      this.decimal = this.sMaj * this.mMaj * Math.pow(2, this.e_prime - D_ + 1);
     }
   }
 
@@ -143,7 +151,7 @@ class FloatType {
 //genere les checkbox pour l'exposant
 function generateExponentCheckbox(){
   let exposant = document.getElementById('exponent');
-
+  exposant.innerHTML = '';
   for(let i = 1; i <= EXP; i++)
   {
     exposant.innerHTML += '<input type="checkbox" id="e'+ i +'" onclick="onClicEvent()">';
@@ -153,7 +161,7 @@ function generateExponentCheckbox(){
 //genere les checkbox pour la mantisse
 function generateMantissaCheckbox(){
   let mantissa = document.getElementById('mantissa');
-
+  mantissa.innerHTML = '';
   for(let i = 1; i <= MAN; i++)
   {
     mantissa.innerHTML += '<input type="checkbox" id="m'+ i +'"  onclick="onClicEvent()">'
@@ -172,32 +180,32 @@ class BinaryType{
     {
       console.log('zero');
       this.sign = '0';
-      this.exponent = toBinary8(0);
-      this.mantissa = fillWith0('');
+      this.exponent = toBinaryX(0, EXP, '0');
+      this.mantissa = fillWithX('','0');
     }
     //si le champs vaut 'Infinity', bit du signe à 0, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0
     else if (float == "Infinity")
     {
       console.log('Infinity');
       this.sign = '0';
-      this.exponent = '11111111';
-      this.mantissa = fillWith0('');
+      this.exponent = toBinaryX(1, EXP, '1');
+      this.mantissa = fillWithX('','0');
     }
     //si le champs vaut '-Infinity', bit du signe à 1, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0
     else if (float == "-Infinity")
     {
       console.log('-Infinity');
       this.sign = '1';
-      this.exponent = '11111111';
-      this.mantissa = fillWith0('');
+      this.exponent = toBinaryX(1, EXP, '1');
+      this.mantissa = fillWithX('','0');
     }
     //si le champs vaut 'Nan' qui signie Not a Number, bit du signe à 0, tout les bits de l'exposant à 1, et tout les bits de la mantisse a 0 sauf le 1er
     else if (float == "NaN")
     {
       console.log('Nan');
       this.sign = '0';
-      this.exponent = '11111111';
-      this.mantissa = fillWith0('1');
+      this.exponent = toBinaryX(1, EXP, '1');
+      this.mantissa = fillWithX('1','0');
     }
     // si c'est aucun des cas au dessus on effectue le traitement habituel
     else
@@ -207,13 +215,13 @@ class BinaryType{
       {
         console.log(float);
         this.sign = this._getSign(float);
-        this._transformScientificBase2(float);
+        this._calculateExponentAndMantissa(float);
       }
       else
       {
         this.sign = '0';
-        this.exponent = '11111111';
-        this.mantissa = fillWith0('1');
+        this.exponent = toBinaryX(1, EXP, '1');
+        this.mantissa = fillWithX('1', '0');
       }
     }
     this.binary = this.sign + this.exponent + this.mantissa;//on assemble le nombre binaire dans sa totalité
@@ -231,57 +239,54 @@ class BinaryType{
     }
   }
 
-  //converti le nombre passé en parametre en notation scientifique sans décalage donc (2^0)
-  _transformScientificBase2WithoutShift(float){
-    this.integral2 = toBinary8(parseInt(float, 10));//on prends uniquement le chiffre avant la virgule en base 2
+  //calcule l'exposant et la mantisse en effectuant une conversion en notation scientifique base 2, puis en depacant la virgule afin d'avoir un nombre correct
+  _calculateExponentAndMantissa(float){
+    let integral2 = toBinaryX(parseInt(float, 10), EXP, '0');//on prends uniquement le chiffre avant la virgule en base 2
     let fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
 
 
-    this.fractional2 = ''; //contient les chiffres apres la virgule en base 2
+    let fractional2 = ''; //contient les chiffres apres la virgule en base 2
 
     //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
     // si la fraction est plus grande que 1 on enleve le chiffre avant la virgule
     let i = 0;
     //127 + 23 permet de ne perdre aucune précision, en effet si on prends le cas extreme qui serait un nombre entre -1 et 1 tres tres petit, le nombre de décalage maximum
     //serait de 127 etant donné que l'exposant = 127 + décalge, apres 127 décalge il faut encore récupérer la valeur de mantisse donc 23 bit.
-    while(fractional10 != 0 && i < 127 + MAN)
+    //(cette exemple est pour la version 32 bit mais marche avec les autres version)
+    while(fractional10 != 0 && i < D_ + MAN)
     {
       fractional10 = fractional10 * 2;
       if(fractional10 >= 1)
       {
-        this.fractional2 += '1';
+        fractional2 += '1';
       }
       else
       {
-        this.fractional2 += '0';
+        fractional2 += '0';
       }
       fractional10 = this._getDecimal(fractional10);
       i++;
     }
 
-    this.number2 = (this.integral2 + '.' + this.fractional2).split('');//nombre en binaire avec la notation scientifique mais non somplifié (2^0)
-  }
+    let number2 = (integral2 + '.' + fractional2).split('');//nombre en binaire avec la notation scientifique mais non somplifié (2^0)
 
-  //converti la notation scientifique base 2 sans décalage en notation avec décalage, calcule la mantisse et l'exposant
-  _transformScientificBase2(float){
-    this._transformScientificBase2WithoutShift(float);
-
-    let pointIndex = this.integral2.length;//index du point dans le chiffre
+    let pointIndex = integral2.length;//index du point dans le chiffre
 
     //on itere dans le nombre jusqu'a trouver un 1, on effectue encore une fois j++ pour se placer juste apres le 1, car c'est ici que l'on veut placer la virgule
     let j = 0;
-    while(this.number2[j] != 1)
+    while(number2[j] != 1)
     {
       j++;
     }
     j++;
 
-    this.mantissa = (this.integral2 + this.fractional2).split('');
+    let power = 0;
+    this.mantissa = (integral2 + fractional2).split('');
     //si le nombre n'est pas compris entre -1 et 1, on regarde de combien on a décalé la virgule,
     //pour la mantisse on enleve les 0 inutile et le 1er 1
     if(float <= -1 || float >= 1)
     {
-      this.power = pointIndex - j;
+      power = pointIndex - j;
       this.mantissa.splice(0,j);
     }
     //si le nombre est compris entre -1 et 1, on regarde de combien on a  decalé la virgule
@@ -289,12 +294,11 @@ class BinaryType{
     //pour la mantisse on enleve les 0 inutile et le 1er 1
     else
     {
-      this.power = pointIndex - j + 1;
+      power = pointIndex - j + 1;
       this.mantissa.splice(0, j - 1);
     }
-    this.exponent = toBinary8(127 + this.power);//on calcule l'exposant qu'on converti en binaire
-
-    this.mantissa = fillWith0(this.mantissa.splice(0, MAN).join(""));//on prends les 23 premier bit de la mantisse[splice()], on converti le tableau en string[join()], on remplie la droite de la mantisse avec des 0[fillWith0()]
+    this.exponent = toBinaryX(D_ + power, EXP, '0');//on calcule l'exposant qu'on converti en binaire
+    this.mantissa = fillWithX(this.mantissa.splice(0, MAN).join(""), '0');//on prends les 23 premier bit de la mantisse[splice()], on converti le tableau en string[join()], on remplie la droite de la mantisse avec des 0[fillWith0()]
   }
 
   //récupére les chiffres apres la virgule du nombre passé en parametre (si nombre < 1 par exemple 0.5 retourne 0.5)
@@ -306,7 +310,7 @@ class BinaryType{
 
   //permet de remplir ou non les checkboxs (attention le nombre passé en parametre doit etre de longeur 32)
   static setCheckBox(binary){
-    if(binary.length == 32)
+    if(binary.length == 1 + EXP + MAN)
     {
       let sign = document.getElementById('s1');
 
@@ -376,9 +380,24 @@ function onInputEvent(){
     BinaryType.setCheckBox(binary_obj.binary);
 }
 
-function debug(){
-  let test = new BinaryType(34.890625);
-  console.log("binary number : " + test.binary);
+function selectEvent(){
+  document.getElementById("decimal").value = '';	
+  var e = document.getElementById("norme");
+  var val = e.options[e.selectedIndex].value;
+  if(val == "single_precision")
+  {
+    EXP = 8;
+    MAN = 23;
+    D_ = 127;
+  }
+  else if(val == "double_precision")
+  {
+    EXP = 11;
+    MAN = 52;
+    D_ = 1023;
+  }
+  generateExponentCheckbox();
+  generateMantissaCheckbox();
 }
 
 
