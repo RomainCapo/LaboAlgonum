@@ -331,7 +331,13 @@ function multiplication() {
   let a = document.getElementById('a_multiplication').value;
   let b = document.getElementById('b_multiplication').value;
 
-  document.getElementById('multiplication').innerHTML = a*b;
+  a = new BinaryType(a);
+  b = new BinaryType(b);
+
+  alert(a.toSource());
+  alert(b.toSource());
+
+  //document.getElementById('multiplication').innerHTML = a;
 }
 
 // Division
