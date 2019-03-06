@@ -372,7 +372,7 @@ function onClicEvent(){
   decimal_input.value = decimal_obj.decimal;
 }
 
-//lors du chanegement d'etat de l'input on converti le nombre courant en decimal -> binaire et on met a jour les checkboxs
+//lors du changement d'etat de l'input on converti le nombre courant en decimal -> binaire et on met a jour les checkboxs
 function onInputEvent(){
   let decimal_input = BinaryType.getInputValue();
 
@@ -380,10 +380,12 @@ function onInputEvent(){
     BinaryType.setCheckBox(binary_obj.binary);
 }
 
+//lors d'une selection dans la liste déroulante
+// formule pour trouver D_ : pow(2, exponent - 1) - 1
 function selectEvent(){
-  document.getElementById("decimal").value = '';	
-  var e = document.getElementById("norme");
-  var val = e.options[e.selectedIndex].value;
+  document.getElementById("decimal").value = '';
+  let e = document.getElementById("norme");
+  let val = e.options[e.selectedIndex].value;
   if(val == "single_precision")
   {
     EXP = 8;
@@ -395,6 +397,21 @@ function selectEvent(){
     EXP = 11;
     MAN = 52;
     D_ = 1023;
+  }
+  generateExponentCheckbox();
+  generateMantissaCheckbox();
+}
+
+function changeExposentMantissa(){
+  document.getElementById("decimal").value = '';
+
+  let exponent = parseInt(document.getElementById('exponent_input').value);
+  let mantissa = parseInt(document.getElementById('mantissa_input').value);
+  if(!isNaN(exponent) && !isNaN(mantissa))
+  {
+    EXP = exponent;
+    MAN = mantissa;
+    D_ = Math.pow(2, exponent - 1) - 1;
   }
   generateExponentCheckbox();
   generateMantissaCheckbox();
