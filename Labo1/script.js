@@ -61,7 +61,7 @@ class FloatType {
     // si c'est aucun des cas au dessus on effectue le traitement habituel
     else
     {
-      //console.log(s + e + m);
+      console.log(s + e + m);
       this.sMaj = this._getSValue(s);
 
       this.e_prime = this._getEPrimeValue(e);
@@ -243,8 +243,6 @@ class BinaryType{
   _calculateExponentAndMantissa(float){
     let integral2 = toBinaryX(parseInt(float, 10), EXP, '0');//on prends uniquement le chiffre avant la virgule en base 2
     let fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
-
-
     let fractional2 = ''; //contient les chiffres apres la virgule en base 2
 
     //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
@@ -392,6 +390,7 @@ function selectEvent(){
     EXP = 8;
     MAN = 23;
     D_ = 127;
+
   }
   else if(val == "double_precision")
   {
@@ -399,6 +398,7 @@ function selectEvent(){
     MAN = 52;
     D_ = 1023;
   }
+  
   generateExponentCheckbox();
   generateMantissaCheckbox();
 }
