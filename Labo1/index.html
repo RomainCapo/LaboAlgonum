@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,6 +8,12 @@
     <style media="screen">
     table, th, td {
       border: 1px solid black;
+    }
+
+    #exponent_input, #mantissa_input{
+      width: 70px;
+      margin-left: 5px;
+      margin-right: 5px;
     }
   </style>
   </head>
@@ -25,8 +30,16 @@
           </ul>
       <hr>
       <h2># Partie 1 - Conversion bidirectionnelle</h2>
-      <input type="text" id="decimal" oninput="onInputEvent()"><br/><br/>
+      <select id="norme" name="norme" onchange="selectEvent()">
+        <option value="single_precision">IEEE 754 single precision</option>
+        <option value="double_precision">IEEE 754 double precision</option>
+      </select><br/><br/>
+      <label for="exponent_input">Nb bits de l'exposant : </label><input type="number" id="exponent_input" name="exponent_input"/ ><label for="mantissa_input">Nb bits de la mantisse : </label><input type="number" id="mantissa_input" name="mantissa_input"/ ><input onclick="changeExposentMantissa()"type="submit" value="Appliquer">
+      <br/>
+      <br/>
+      <label for="decimal">Nombre décimale : </label> <input type="text" id="decimal" oninput="onInputEvent()"><br/>
       <table>
+
         <thead>
           <tr>
             <th>Signe</th>
@@ -42,12 +55,35 @@
           </td>
         </tbody>
       </table>
-      <button type="button" id="debug" onclick="debug()">Debug</button>
       <hr>
       <h2># Partie 2 - Bonus</h2>
 
       <!--TODO addition et soustraction -->
+      <h4>Addition (A*B)</h4>
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="text" id="a_addition" class="form-control" placeholder="A">
+          <span>&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+          <input type="text" id="b_addition" class="form-control" placeholder="B">
+        </div>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" class="btn btn-primary" onclick="addition()"> = </button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <span id="addition"></span>
+      </div>
 
+      <h4>Soustraction (A/B)</h4>
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="text" id="a_soustraction" class="form-control" placeholder="A">
+          <span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+          <input type="text" id="b_soustraction" class="form-control" placeholder="B">
+        </div>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" class="btn btn-primary" onclick="soustraction()"> = </button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <span id="soustraction"></span>
+      </div>
       <h4>Multiplication (A*B)</h4>
       <div class="form-inline">
         <div class="form-group">
@@ -73,9 +109,41 @@
         <span>&nbsp;&nbsp;&nbsp;</span>
         <span id="division"></span>
       </div>
-
+      <hr>
+      <br/>
+      <h2>Contextualisation</h2>
+      <p>
+        Le but de ce labo était de faire un exemple de codage de nombre floattant. Pour représenté cela, nous avons décidé de faire un convertisseur bidirectionnel.
+        Il est alors possible de convertir un nombre décimal en binaire et inversement.
+      </p>
+      <h2>Méthodologie</h2>
+      <p>
+        Pour résoudre ce problème, nous avons choisi de créer 2 classes :
+        <ul>
+          <li>La classe 'FloatType' pour la conversion de binaire à decimal. Elle prends en parametre
+          le bit de sign, les bits de l'exposent et de la mantisse. Dans le constructeur, on commence par regarder si le nombre binaire n'est pas un cas particulier de la norme
+          IEEE754. Puis pour la suite, la classe effectue la conversion en décimale. Il est possible de récupérer le résultat de la sortie avec l'attribut decimal. On peut également
+          récupérer la valeur de M, S et e'.
+        </li>
+        <br/>
+        <li>
+          La classe 'BinaryType' pour la conversion décimale à binaire. Elle prends en parametre le nombre décimal. Dans le constructeur, on commence par regarder si le nombre binaire n'est pas un cas particulier de la norme
+          IEEE754. Puis on effectue les calculs pour trouver la valeur du nombre en notation scientifique binaire. A partir de cela, on peut obtenir via les attributs la valeur du sign, de l'exposent et de la mantisse. Le résultat
+          final peut également être récupérer via l'attribut binary.
+        </li>
+        </ul>
+        Les deux classes contiennent également des méthodes statique, pour la récupération des nombres via les checkbox ou le champ texte. D'autre méthode indépandante des autres classes
+        permettent de traiter les évenements. Le nombre de bit de l'exposent, de la mantisse et de la valeur de D sont défini via des variables gloables pour y avoir accès n'importe ou dans le code.
+      </p>
+      <h2>Source</h2>
+      <ul>
+        <li>Cours d'algorithme numérique</li>
+        <li>http://www.oxfordmathcenter.com/drupal7/node/43</li>
+        <li>https://blog.penjee.com/binary-numbers-floating-point-conversion/</li>
+        <li>https://fr.wikipedia.org/wiki/IEEE_754</li>
+        <li>https://www.h-schmidt.net/FloatConverter/IEEE754.html</li>
+      </ul>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>
