@@ -427,15 +427,110 @@ document.addEventListener("DOMContentLoaded", function(event) {
 // Multiplication
 
 function multiplication() {
-  let a = document.getElementById('a_multiplication').value;
+  let a = document.getElementById('a_multiplication').value; // Récupération valeur a et b
   let b = document.getElementById('b_multiplication').value;
 
-  a = new BinaryType(a);
+  a = new BinaryType(a); // conversion en bianire (signe, exposant, mantisse)
   b = new BinaryType(b);
 
-  alert(a.toSource());
-  alert(b.toSource());
+  let mantissa_a = "1" + a.mantissa; // ajout d'un bit le plus significatif pour la normalisation
+  let mantissa_b = "1" + b.mantissa;
 
+  let value = "";
+  let turn = 0;
+  let front = mantissa_b.length - 1;
+  let arrayValue = [];
+
+  for (iterB = mantissa_b.length - 1; iterB >= 0; iterB--) {
+
+    value = "";
+
+    for(let i = 0; i < turn; i++)
+    {
+      value += "0";
+    }
+
+    turn++;
+
+    for (iterA = mantissa_a.length - 1; iterA >= 0; iterA--) 
+    {
+      value += mantissa_a[iterA] * mantissa_b[iterB];
+    }
+
+    for(let j = 0; j < front; j++)
+    {
+      value += "0";
+    }
+
+    front--;
+    arrayValue[iterB] = value;
+  }
+
+  //console.log(arrayValue)
+
+  let temp = [];
+  let retenue = 0;
+  let result = "";
+
+  for(let j = 0; j <= arrayValue.length - 1; j++)
+  {
+    for(let t = arrayValue[0].length - 1; t >= 0; t--)
+    {
+        if(j == 0)
+        {
+          let tmp = parseInt(arrayValue[j][t]) + parseInt(arrayValue[j+1][t]);
+
+          /*if(retenue == 1)
+          {
+            tmp += 1;
+            retenue = 0;
+          }
+          
+          if(tmp == 2)
+          {
+            tmp = 0;
+            retenue = 1;
+          }*/
+
+          result += (tmp).toString();
+        }
+        else
+        {
+          let tmp = parseInt(temp[j-1][t]) + parseInt(arrayValue[j][t]);
+
+          /*if(retenue == 1)
+          {
+            tmp += 1;
+            retenue = 0;
+          }
+          
+          if(tmp == 2)
+          {
+            tmp = 0;
+            retenue = 1;
+          }*/
+
+          result += (tmp).toString();
+        }
+    }
+
+    //console.log(result);
+
+    temp[j] = result.split("").reverse().join("");
+    result = "";
+  }
+
+  for(let x = 0; x <= temp.length -1; x++)
+  {
+    temp[x] = temp[x].split("").reverse().join("");
+  }
+
+  console.log(temp);
+
+  //console.log(arrayValue[0][46]);
+
+
+  
   //document.getElementById('multiplication').innerHTML = a;
 }
 

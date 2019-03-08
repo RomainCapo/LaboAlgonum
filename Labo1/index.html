@@ -34,7 +34,7 @@
         <option value="single_precision">IEEE 754 single precision</option>
         <option value="double_precision">IEEE 754 double precision</option>
       </select><br/><br/>
-      <label for="exponent_input">Nb bits de l'exposant : </label><input type="number" id="exponent_input" name="exponent_input"/ ><label for="mantissa_input">Nb bits de la mantisse : </label><input type="number" id="mantissa_input" name="mantissa_input"/ ><input onclick="changeExposentMantissa()"type="submit" value="Appliquer">
+      <label for="exponent_input">Nb bits de l'exposant : </label><input type="number" id="exponent_input" name="exponent_input"/ ><label for="mantissa_input">Nb bits de la mantisse : </label><input type="number" id="mantissa_input" name="mantissa_input"/><button type="button" class="btn btn-primary" onclick="changeExposentMantissa()">Appliquer</button>
       <br/>
       <br/>
       <label for="decimal">Nombre décimale : </label> <input type="text" id="decimal" oninput="onInputEvent()"><br/>
@@ -63,9 +63,9 @@
       <h4>Multiplication (A*B)</h4>
       <div class="form-inline">
         <div class="form-group">
-          <input type="text" id="a_multiplication" class="form-control" placeholder="A" value="3">
+          <input type="text" id="a_multiplication" class="form-control" placeholder="A" value="-18">
           <span>&nbsp;&nbsp;*&nbsp;&nbsp;</span>
-          <input type="text" id="b_multiplication" class="form-control" placeholder="B" value="6">
+          <input type="text" id="b_multiplication" class="form-control" placeholder="B" value="9.5">
         </div>
         <span>&nbsp;&nbsp;&nbsp;</span>
         <button type="button" class="btn btn-primary" onclick="multiplication()"> = </button>
