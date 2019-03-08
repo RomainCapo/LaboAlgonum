@@ -427,12 +427,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 function add(a,b,c)
 {
+	//check if number or empty
+	if(isNaN(a)||isNaN(b)||a==""||b=="")
+	{
+		let notGood = "Pas un nombre ou vide";
+		return notGood;
+	}
+
+	if((c==true&&a-b== 0)||(c==false&&parseFloat(a)+parseFloat(b)==0))
+	{
+		return 0;
+	}		
+	
 	let f1 = new BinaryType(a);
 	let f2 = new BinaryType(b);
 	
 	let f3;
 	
-	let sub = c;
+	let sub = c;	
 	
 	if(sub == true)
 	{
