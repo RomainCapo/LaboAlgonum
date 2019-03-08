@@ -425,38 +425,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 
-function add(a,b,c)
+function add(a,b)
 {
-	//check if number or empty
-	if(isNaN(a)||isNaN(b)||a==""||b=="")
-	{
-		let notGood = "Pas un nombre ou vide";
-		return notGood;
-	}
-
-	if((c==true&&a-b== 0)||(c==false&&parseFloat(a)+parseFloat(b)==0))
-	{
-		return 0;
-	}		
-	
 	let f1 = new BinaryType(a);
 	let f2 = new BinaryType(b);
 	
 	let f3;
 	
-	let sub = c;	
-	
-	if(sub == true)
-	{
-		if(f2.sign == 1)
-		{
-			f2.sign = 0;
-		}
-		else
-		{
-			f2.sign = 1;
-		}
-	}
 	//swap in absolute
 	if(f1.binary.slice(1,f1.mantissa.length) < f2.binary.slice(1,f2.mantissa.length))
 	{
@@ -465,7 +440,6 @@ function add(a,b,c)
 		f1 = f11;
 		//init f3
 		f3 = new BinaryType(b);
-		f3.sign = f1.sign;
 	}
 	else
 	{
@@ -571,20 +545,8 @@ function add(a,b,c)
 		{
 			f3.mantissa = 1 + f3.mantissa;
 		}
-		if(f3.mantissa.length > f1.mantissa.length)
-		{
-			e1D++;
-			f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
-		}
-		else
-		{
-			f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
-			f3.mantissa = f3.mantissa + 0;
-		}
-		e1D--;
-		f3.exponent = parseInt(e1D,10).toString(2);
 	}
-	else
+	else //TODO SIGNE DIFFERENTS, NE FONCTIONNE PAS
 	{
 		for(i=f1.mantissa.length; i>0; i--)
 		{
@@ -611,7 +573,7 @@ function add(a,b,c)
 				for(let k=j+1; k<=i; k++)
 				{
 					f1.mantissa = f1.mantissa.slice(0,k-1) + 1 + f1.mantissa.slice(k,f1.mantissa.length);
-
+					console.log("fa");
 				}
 				f3.mantissa = 1 + f3.mantissa;
 			}
@@ -620,18 +582,28 @@ function add(a,b,c)
 				f3.mantissa = 0 + f3.mantissa;
 			}
 		}
-		
-		while(f3.mantissa.slice(0,1) != 1)
-		{
-			e1D--;
-			f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
-			f3.mantissa = f3.mantissa + 0;
-		}
-		f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
-		f3.exponent = parseInt(e1D,10).toString(2);
 	}
+	
 
+	//normaliser f3.mantissa donc reajusster f3.exponent
+	if(f3.mantissa.length > f1.mantissa.length)
+	{
+		e1D++;
+		f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
+	}
+	else
+	{
+		f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
+		f3.mantissa = f3.mantissa + 0;
+	}
+	f3.exponent = parseInt(e1D,10).toString(2);
+	
+	console.log(f1);
+	console.log(f2);
+	console.log(f3);
+	
 	valeur = new FloatType(f3.sign, f3.exponent, f3.mantissa);
+	
 	return valeur.decimal;
 }
 
@@ -641,7 +613,7 @@ function addition() {
   let a = document.getElementById('a_addition').value;
   let b = document.getElementById('b_addition').value;
 
-  document.getElementById('addition').innerHTML = add(a,b,false);
+  document.getElementById('addition').innerHTML = add(a,b)/2;
 }
 
 // Soustraction
@@ -650,7 +622,7 @@ function soustraction() {
   let a = document.getElementById('a_soustraction').value;
   let b = document.getElementById('b_soustraction').value;
 
-  document.getElementById('soustraction').innerHTML = add(a,b,true);
+  document.getElementById('soustraction').innerHTML = a-b;
 }
 // Multiplication
 
