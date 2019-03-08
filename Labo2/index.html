@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Labo 2</title>
+    <link rel="stylesheet" href="/theme/css/base.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style media="screen">
+
+	</style>
+  </head>
+  <body>
+    <div class="container">
+      <br>
+      <br>
+      <h1>Algorithme numérique - Labo 2</h1>
+      <p>Auteurs:</p>
+          <ul>
+            <li>Romain Capocasale</li>
+            <li>Vincent Moulin</li>
+            <li>Loïc Jurasz</li>
+          </ul>
+      <hr>
+      <h2># Draw Plot</h2>
+      <select id="equation" name="equation" onchange="selectEvent()">
+        <option value="equa1">sin(x) - x/13</option>
+        <option value="equa2">x/(1-x^2)</option>
+      </select><br/><br/>
+      <canvas id="canvas" width="400" height="400"></canvas>
+      <hr>
+      <br/>
+      <h2>Contextualisation</h2>
+      <h2>Méthodologie</h2>
+      <h2>Source</h2>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
