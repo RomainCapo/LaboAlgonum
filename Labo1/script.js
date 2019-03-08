@@ -453,7 +453,7 @@ function add(a,b,c)
 		f1 = f11;
 		//init f3
 		f3 = new BinaryType(b);
-		f3.sign = f2.sign;
+		f3.sign = f1.sign;
 	}
 	else
 	{
