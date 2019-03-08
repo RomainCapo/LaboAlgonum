@@ -243,8 +243,6 @@ class BinaryType{
   _calculateExponentAndMantissa(float){
     let integral2 = toBinaryX(parseInt(float, 10), EXP, '0');//on prends uniquement le chiffre avant la virgule en base 2
     let fractional10 = this._getDecimal(float);//on prends uniquement les chiffres après la virgule en base 10
-
-
     let fractional2 = ''; //contient les chiffres apres la virgule en base 2
 
     //la fraction est multiplié par 2 tant qu'elle n'est pas egal à 0 et que 23 itération ne se sont pas écoulé
@@ -363,6 +361,7 @@ class BinaryType{
   static getInputValue(){
     return document.getElementById('decimal').value;
   }
+  
 }
 
 //lors du clic sur une checkbox on effectue la conversion binaire -> decimal et on met a jour dans l'input de type text
@@ -391,6 +390,7 @@ function selectEvent(){
     EXP = 8;
     MAN = 23;
     D_ = 127;
+
   }
   else if(val == "double_precision")
   {
@@ -398,6 +398,7 @@ function selectEvent(){
     MAN = 52;
     D_ = 1023;
   }
+  
   generateExponentCheckbox();
   generateMantissaCheckbox();
 }
@@ -424,6 +425,205 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 
+function add(a,b)
+{
+	let f1 = new BinaryType(a);
+	let f2 = new BinaryType(b);
+	
+	let f3;
+	
+	//swap in absolute
+	if(f1.binary.slice(1,f1.mantissa.length) < f2.binary.slice(1,f2.mantissa.length))
+	{
+		let f11 = f2;
+		f2 = f1;
+		f1 = f11;
+		//init f3
+		f3 = new BinaryType(b);
+	}
+	else
+	{
+	//init f3
+	f3 = new BinaryType(a);
+	}
+
+	//know how much we shift f2.mantissa
+	let diff = 0;
+	let e1D = parseInt(f1.exponent, 2);
+	let e2D = parseInt(f2.exponent, 2);
+	if(e1D < e2D)
+	{
+		diff = (e2D - e1D);
+	}
+	else
+	{
+		diff = (e1D - e2D);
+	}
+
+	//add hidden bit
+	f1.mantissa = 1 + f1.mantissa;
+	f2.mantissa = 1 + f2.mantissa;
+
+	//shift f2.mantissa
+	for(i=0; i<diff; i++)
+	{
+		f2.mantissa = 0+ f2.mantissa;
+		f2.mantissa = f2.mantissa.slice(0,f2.mantissa.length-1);
+	}
+
+	//begin to put in f3 mantissa
+	f3.mantissa = "";
+	//add or sub mantissa
+	if(f1.sign == f2.sign)
+	{
+		let poi = false;
+
+		for(i=f1.mantissa.length; i>0; i--)
+		{
+			if(f1.mantissa.slice(i-1,i) == 1)
+			{
+				if(f2.mantissa.slice(i-1,i) == 1)
+				{
+					if(poi == true)
+					{
+						f3.mantissa = 1 + f3.mantissa;
+					}
+					else
+					{
+						f3.mantissa = 0 + f3.mantissa;
+						poi = true;
+					}
+				}
+				else if(poi == true)
+				{
+					f3.mantissa = 0 + f3.mantissa;
+					poi = true;
+				}
+				else
+				{
+					f3.mantissa = 1 + f3.mantissa;
+				}
+			}
+			else if(f2.mantissa.slice(i-1,i) == 1)
+			{
+				if(f1.mantissa.slice(i-1,i) == 1)
+				{
+					if(poi == true)
+					{
+						f3.mantissa = 1 + f3.mantissa;
+					}
+					else
+					{
+						f3.mantissa = 0 + f3.mantissa;
+						poi = true;
+					}
+				}
+				else if(poi == true)
+				{
+					f3.mantissa = 0 + f3.mantissa;
+					poi = true;
+				}
+				else
+				{
+					f3.mantissa = 1 + f3.mantissa;
+				}
+			}
+			else
+			{
+				if(poi == true)
+				{
+					f3.mantissa = 1 + f3.mantissa;
+					poi = false;
+				}
+				else
+				{
+					f3.mantissa = 0 + f3.mantissa;
+				}
+			}
+		}
+		if(poi == true)
+		{
+			f3.mantissa = 1 + f3.mantissa;
+		}
+	}
+	else //TODO SIGNE DIFFERENTS, NE FONCTIONNE PAS
+	{
+		for(i=f1.mantissa.length; i>0; i--)
+		{
+			if(f1.mantissa.slice(i-1,i) == 1)
+			{
+				if(f2.mantissa.slice(i-1,i) == 1)
+				{
+					f3.mantissa = 0 + f3.mantissa;
+				}
+				else
+				{
+					f3.mantissa = 1 + f3.mantissa;
+				}
+			}
+			else if(f2.mantissa.slice(i-1,i) == 1)
+			{
+				console.log(i);
+				let j=i;
+				while(f1.mantissa.slice(j-1,j) !=1)
+				{
+					j--;
+				}
+				f1.mantissa = f1.mantissa.slice(0,j-1) + 0 + f1.mantissa.slice(j,f1.mantissa.length); //marche ?
+				for(let k=j+1; k<=i; k++)
+				{
+					f1.mantissa = f1.mantissa.slice(0,k-1) + 1 + f1.mantissa.slice(k,f1.mantissa.length);
+					console.log("fa");
+				}
+				f3.mantissa = 1 + f3.mantissa;
+			}
+			else
+			{
+				f3.mantissa = 0 + f3.mantissa;
+			}
+		}
+	}
+	
+
+	//normaliser f3.mantissa donc reajusster f3.exponent
+	if(f3.mantissa.length > f1.mantissa.length)
+	{
+		e1D++;
+		f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
+	}
+	else
+	{
+		f3.mantissa = f3.mantissa.slice(1,f3.mantissa.length);
+		f3.mantissa = f3.mantissa + 0;
+	}
+	f3.exponent = parseInt(e1D,10).toString(2);
+	
+	console.log(f1);
+	console.log(f2);
+	console.log(f3);
+	
+	valeur = new FloatType(f3.sign, f3.exponent, f3.mantissa);
+	
+	return valeur.decimal;
+}
+
+// Addition
+
+function addition() {
+  let a = document.getElementById('a_addition').value;
+  let b = document.getElementById('b_addition').value;
+
+  document.getElementById('addition').innerHTML = add(a,b)/2;
+}
+
+// Soustraction
+
+function soustraction() {
+  let a = document.getElementById('a_soustraction').value;
+  let b = document.getElementById('b_soustraction').value;
+
+  document.getElementById('soustraction').innerHTML = a-b;
+}
 // Multiplication
 
 function multiplication() {
