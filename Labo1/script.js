@@ -666,73 +666,104 @@ function multiplication() {
     arrayValue[iterB] = value;
   }
 
-  //console.log(arrayValue)
 
   let temp = [];
-  let retenue = 0;
   let result = "";
 
   for(let j = 0; j <= arrayValue.length - 1; j++)
   {
     for(let t = arrayValue[0].length - 1; t >= 0; t--)
     {
+        let tmp = 0;
+
         if(j == 0)
         {
-          let tmp = parseInt(arrayValue[j][t]) + parseInt(arrayValue[j+1][t]);
-
-          /*if(retenue == 1)
-          {
-            tmp += 1;
-            retenue = 0;
-          }
-          
-          if(tmp == 2)
-          {
-            tmp = 0;
-            retenue = 1;
-          }*/
-
-          result += (tmp).toString();
+          tmp = parseInt(arrayValue[j][t]) + parseInt(arrayValue[j+1][t]);
         }
         else
         {
-          let tmp = parseInt(temp[j-1][t]) + parseInt(arrayValue[j][t]);
-
-          /*if(retenue == 1)
-          {
-            tmp += 1;
-            retenue = 0;
-          }
-          
-          if(tmp == 2)
-          {
-            tmp = 0;
-            retenue = 1;
-          }*/
-
-          result += (tmp).toString();
+          tmp = parseInt(temp[j-1][t]) + parseInt(arrayValue[j][t]);
         }
-    }
 
-    //console.log(result);
+        if(tmp == 2)
+        {
+          result = replaceAt(result, 0, "1");
+          tmp = 0;
+        }
 
-    temp[j] = result.split("").reverse().join("");
+        result = (tmp).toString() + result;
+    } 
+
+    temp[j] = result;
     result = "";
   }
 
-  for(let x = 0; x <= temp.length -1; x++)
-  {
-    temp[x] = temp[x].split("").reverse().join("");
+  let mantisse_response = temp[23].split("").reverse().join("").substring(1,24);
+
+  let sign_response = (a.sign ^ b.sign); // Calcul du signe du résultat de la multiplication (XOR)
+
+  let exponent_a = a.exponent;
+  let exponent_b = b.exponent;
+
+  let answerAdd = addBinary(exponent_a, exponent_b).substring(1,9);
+
+  let subtractNb = "10000001"; // Valeur du -127 à additionner avec l'addition des deux exposants
+
+  let resultSub = addBinary(answerAdd, subtractNb);
+  let exponent_response = resultSub;
+
+  f = new FloatType(sign_response, exponent_response, mantisse_response); // Conversion des différentes valeurs en un nombre flottant
+
+  document.getElementById('multiplication').innerHTML = f.decimal; // Affichage de la valeur de la multiplication
+}
+
+function replaceAt(string, index, replace) {
+  return string.substring(0, index) + replace + string.substring(index + 1);
+}
+
+// ------ Code repris sur stackoverflow ----- //
+// source : https://stackoverflow.com/questions/40353000/javascript-add-two-binary-numbers-returning-binary //
+function addBinary(a, b){
+
+  let sum = '';
+  let carry = '';
+
+  for(var i = a.length-1;i>=0; i--){
+    if(i == a.length-1){
+      //half add the first pair
+      const halfAdd1 = halfAdder(a[i],b[i]);
+      sum = halfAdd1[0]+sum;
+      carry = halfAdd1[1];
+    }else{
+      //full add the rest
+      const fullAdd = fullAdder(a[i],b[i],carry);
+      sum = fullAdd[0]+sum;
+      carry = fullAdd[1];
+    }
   }
 
-  console.log(temp);
-
-  //console.log(arrayValue[0][46]);
-
-
-  
-  //document.getElementById('multiplication').innerHTML = a;
+  return carry ? carry + sum : sum;
 }
+
+function halfAdder(a, b){
+  const sum = xor(a,b);
+  const carry = and(a,b);
+  return [sum, carry];
+}
+
+function fullAdder(a, b, carry){
+  halfAdd = halfAdder(a,b);
+  const sum = xor(carry, halfAdd[0]);
+  carry = and(carry, halfAdd[0]);
+  carry = or(carry, halfAdd[1]);
+  return [sum, carry];
+}
+
+function xor(a, b){return (a === b ? 0 : 1);}
+function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
+function or(a, b){return (a || b);}
+
+// ------ Fin code repris sur stackoverflow ----- //
 
 // Division
 
