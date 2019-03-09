@@ -1,4 +1,4 @@
-/*function getValueFromAssocArray(array){
+function getValueFromAssocArray(array){
   let tmp = [];
   for(let key in array){
     if(array[key] != "Infinity" || array[key] != "-Infinity")
@@ -12,34 +12,37 @@
 class Plot{
   constructor(){
     this.canvas = document.getElementById("canvas");
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext("2d");//ctx permet de dessiner sur le canvas c'est le contexte
     this.width = canvas.width;
     this.height = canvas.height;
+    this.xRange = 40;
 
-    this.xRange = 200;
-
-      this._calculateFunctionValue();
-    this._moveCoordinateToCenterAndScale();
-    this._drawFunction();
+    this._moveCoordinate();
     this._drawAxis();
+    this._calculateFunctionValue();
+    this._scaleCanvas();
+    this._drawFunction();
   }
 
-  _moveCoordinateToCenterAndScale(){
-
+  //Deplace les coordonné du canvas au centre de celui ci
+  _moveCoordinate(){
     let transX = this.width * 0.5;
     let transY = this.height * 0.5;
     this.ctx.translate(transX, transY);
+  }
 
-    let minY = Math.min.apply(null, getValueFromAssocArray(this.functionValue));
-    let maxY = Math.max.apply(null, getValueFromAssocArray(this.functionValue));
+  //fait un zoom sur la canvas
+  _scaleCanvas(){
+    //comme this.functionValue est un tableau associatif on doit appliquer la fonction min et max sur toutes les valeurs
+    //la fonction getValueFromAssocArray() retourne les valeurs du tableau associatif sous forme de tableau avec seulement les valeurs
+    let minY = Math.min.apply(null, getValueFromAssocArray(this.functionValue));//valeur minimum de la fonction
+    let maxY = Math.max.apply(null, getValueFromAssocArray(this.functionValue));//valeur maximum de la fonction
 
-    let xScale = this.width / this.xRange;
-    let yScale = this.height / (maxY - minY);
+    let xScale = this.width / this.xRange;//donne la place que prends au maximum la focntion sur l'axe X
+    let yScale = this.height / (maxY - minY);//donne la place que la prends au maximum la fonction sur l'axe Y
 
-    console.log("min" + minY);
-    console.log("max" + maxY);
 
-    this.ctx.scale(xScale, -10);
+    this.ctx.scale(xScale, -50);//le signe - permet de renverser le sens de l'axe y
   }
 
   //calcule tout les valeurs de la fonction entre min et max
@@ -53,19 +56,27 @@ class Plot{
 
     for(let i = parseFloat(min); i <= max; i+=0.1)
     {
-      let tmp = i.toString();
-      this.functionValue[tmp] = this._function(i);
+      let key = i.toFixed(2).toString();
+      let val = this._function(i);
+      if(val > 10000)
+      {
+        val = "Infinity";
+      }
+      else if (val < -10000)
+      {
+        val = "-Infinity";
+      }
+      this.functionValue[key] = val;
     }
-    //console.log(this.functionValue);
+    console.log(this.functionValue);
   }
 
   //permet de dessiner les x et y
   // il est imperatif d'appeller cette focntion apres la fonction _moveCoordinateToCenterAndScale()
   _drawAxis(){
+
     let widthMiddle = this.width / 2;
     let heightMiddle = this.height / 2;
-
-    this.ctx.scale(1,-1);
 
     //Axe X
     this.ctx.beginPath();
@@ -85,6 +96,7 @@ class Plot{
     return x / (1 - Math.pow(x,2));
   }
 
+//dessin de la fonction
   _drawFunction(){
     let min = parseFloat(-1 * this.xRange / 2);
     let max = parseFloat(this.xRange / 2);
@@ -92,85 +104,15 @@ class Plot{
     this.ctx.beginPath();
     for(let i = parseFloat(min); i < max; i+=0.1)
     {
-    console.log(parseFloat(i));
-      console.log(this.functionValue[i]);
-      if(this.functionValue[parseFloat(i)] != "Infinity" || this.functionValue[parseFloat(i)] != "-Infinity")
-      {
+      console.log("test");
         this.ctx.moveTo(parseFloat(i), this.functionValue[parseFloat(i)]);
         this.ctx.lineTo(parseFloat(i)+ 0.1, this.functionValue[parseFloat(i) + 0.1]);
-      }
-      else
-      {
-        this.ctx.stroke();
-        this.ctx.beginPath();
-      }
     }
     this.ctx.stroke();
   }
-}*/
-
-//http://www.javascripter.net/faq/plotafunctiongraph.htm
-function fun1(x) {return Math.sin(x) - x/13;  }
-function fun2(x) {return x / (1 - Math.pow(x,2));}
-
-function draw() {
- var canvas = document.getElementById("canvas");
- if (null==canvas || !canvas.getContext) return;
-
- var axes={}, ctx=canvas.getContext("2d");
- axes.x0 = .5 + .5*canvas.width;  // x0 pixels from left to x=0
- axes.y0 = .5 + .5*canvas.height; // y0 pixels from top to y=0
- axes.scale = 40;                 // 40 pixels from x=0 to x=1
- axes.doNegativeX = true;
-
- showAxes(ctx,axes);
- funGraph(ctx,axes,fun1,"rgb(11,153,11)",1);
- funGraph(ctx,axes,fun2,"rgb(66,44,255)",2);
-}
-
-function funGraph (ctx,axes,func,color,thick) {
- var xx, yy, dx=4, x0=axes.x0, y0=axes.y0, scale=axes.scale;
- var iMax = Math.round((ctx.canvas.width-x0)/dx);
- var iMin = axes.doNegativeX ? Math.round(-x0/dx) : 0;
- ctx.beginPath();
- ctx.lineWidth = thick;
- ctx.strokeStyle = color;
-
- for (var i=iMin;i<=iMax;i++) {
-  xx = dx*i; yy = scale*func(xx/scale);
-  if (i==iMin) ctx.moveTo(x0+xx,y0-yy);
-  else         ctx.lineTo(x0+xx,y0-yy);
- }
- ctx.stroke();
-}
-
-function showAxes(ctx,axes) {
- var x0=axes.x0, w=ctx.canvas.width;
- var y0=axes.y0, h=ctx.canvas.height;
- var xmin = axes.doNegativeX ? 0 : x0;
- ctx.beginPath();
- ctx.strokeStyle = "rgb(128,128,128)";
- ctx.moveTo(xmin,y0); ctx.lineTo(w,y0);  // X axis
- ctx.moveTo(x0,0);    ctx.lineTo(x0,h);  // Y axis
- ctx.stroke();
-
- for(let i = xmin; i < w; i++)
- {
-   if(i % 20 == 0)
-   {
-     ctx.beginPath();
-     ctx.moveTo(i, y0 + 7);
-     ctx.lineTo(i, y0 - 7);
-     ctx.stroke();
-   }
- }
 }
 
 function clickEvent(){
-  let test = {};
-  test[-1] = 358;
-  test[0] = 39;
-  test[1] = 759;
 }
 
 function selectEvent(){
@@ -179,6 +121,5 @@ function selectEvent(){
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  //let plot = new Plot();
-  draw();
+  let plot = new Plot();
 });
