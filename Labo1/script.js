@@ -636,41 +636,43 @@ function multiplication() {
   let mantissa_a = "1" + a.mantissa; // ajout d'un bit le plus significatif pour la normalisation
   let mantissa_b = "1" + b.mantissa;
 
-  let value = "";
-  let turn = 0;
+  let value = ""; // variable pour les résultats de la multiplication
+  let turn = 0; 
   let front = mantissa_b.length - 1;
   let arrayValue = [];
 
+
+// Parcours de la mantisse b pour mutiplier avec les éléments de la mantisse a
   for (iterB = mantissa_b.length - 1; iterB >= 0; iterB--) {
 
     value = "";
 
     for(let i = 0; i < turn; i++)
     {
-      value += "0";
+      value += "0"; // ajout des 0 au début pour "simuler" le décalage des bits pour ensuite les additionner et trouver le résultat de la mutiplication
     }
 
     turn++;
 
     for (iterA = mantissa_a.length - 1; iterA >= 0; iterA--) 
     {
-      value += mantissa_a[iterA] * mantissa_b[iterB];
+      value += mantissa_a[iterA] * mantissa_b[iterB]; // affection du résultat d'un bit de la mantisse a fois un bit d ela mantisse b
     }
 
     for(let j = 0; j < front; j++)
     {
-      value += "0";
+      value += "0"; // Ajout des 0 à la fin pour "simuler" le décalage
     }
 
     front--;
-    arrayValue[iterB] = value;
+    arrayValue[iterB] = value; // Ajout du résultat dans un tableau pour ensuite additionner chaque élément du tableau
   }
 
 
   let temp = [];
   let result = "";
 
-  for(let j = 0; j <= arrayValue.length - 1; j++)
+  for(let j = 0; j <= arrayValue.length - 1; j++) // Boucle for imbriquée pour parcourir les valeurs du tableau contenant les résultats des multiplication
   {
     for(let t = arrayValue[0].length - 1; t >= 0; t--)
     {
@@ -678,7 +680,7 @@ function multiplication() {
 
         if(j == 0)
         {
-          tmp = parseInt(arrayValue[j][t]) + parseInt(arrayValue[j+1][t]);
+          tmp = parseInt(arrayValue[j][t]) + parseInt(arrayValue[j+1][t]); // addition des valeurs
         }
         else
         {
@@ -687,29 +689,29 @@ function multiplication() {
 
         if(tmp == 2)
         {
-          result = replaceAt(result, 0, "1");
+          result = replaceAt(result, 0, "1"); // si valeur = 2, alors on met la valeur suivante à 1, et on met la valeur à 0
           tmp = 0;
         }
 
-        result = (tmp).toString() + result;
+        result = (tmp).toString() + result; // affectation du résultat 
     } 
 
-    temp[j] = result;
+    temp[j] = result; // Affectation du résultat final dans un tableau. Le dernier élément du tableau sera le résultat final des additions
     result = "";
   }
 
-  let mantisse_response = temp[23].split("").reverse().join("").substring(1,24);
+  let mantisse_response = temp[23].split("").reverse().join("").substring(1,24); // la mantisse est donc le dernier éléemnt du tableau (remis à l'endroit, car calculer à l'envers), auquel on retire le bit de poids fort
 
   let sign_response = (a.sign ^ b.sign); // Calcul du signe du résultat de la multiplication (XOR)
 
-  let exponent_a = a.exponent;
+  let exponent_a = a.exponent; // Récupération des exposant de chaque valeur
   let exponent_b = b.exponent;
 
-  let answerAdd = addBinary(exponent_a, exponent_b).substring(1,9);
+  let answerAdd = addBinary(exponent_a, exponent_b).substring(1,9); // récupération de l'addition 
 
   let subtractNb = "10000001"; // Valeur du -127 à additionner avec l'addition des deux exposants
 
-  let resultSub = addBinary(answerAdd, subtractNb);
+  let resultSub = addBinary(answerAdd, subtractNb); // Résultat de l'addition entre la réponse de la première et le -127
   let exponent_response = resultSub;
 
   f = new FloatType(sign_response, exponent_response, mantisse_response); // Conversion des différentes valeurs en un nombre flottant
@@ -717,7 +719,8 @@ function multiplication() {
   document.getElementById('multiplication').innerHTML = f.decimal; // Affichage de la valeur de la multiplication
 }
 
-function replaceAt(string, index, replace) {
+function replaceAt(string, index, replace) // Fonction permettant de replacer un caractère dans une chaîne de caractère en passant l'index ou l'on souhaite modifier la valeur
+{
   return string.substring(0, index) + replace + string.substring(index + 1);
 }
 
