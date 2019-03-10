@@ -20,8 +20,6 @@ class Plot{
    this.showAxes(ctx,axes);
    this.funGraph(ctx,axes,this.fun1,"rgb(11,153,11)");
    this.funGraph(ctx,axes,this.fun2,"rgb(66,44,255)");
-
-
   }
 
   funGraph(ctx,axes,func,color) {
