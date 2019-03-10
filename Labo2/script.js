@@ -105,6 +105,36 @@ function selectEvent(){
   let val = e.options[e.selectedIndex].value;
 }
 
+class Dichotomie {
+  constructor(plot){
+    this.plot = plot;
+    this.display();
+  }
+
+  display()
+  {
+    let a = 3;
+    let b = 20;
+    let m = 0;
+
+    while((b-a) > 0)
+    {
+      m = (a+b)/2;
+      if((this.plot.fun2(a) * this.plot.fun2(m)) <= 0)
+      {
+        b = m;
+      }
+      else
+      {
+        a = m;
+      }
+    }
+
+    document.getElementById("racines").innerHTML = "a = " + a + " - b = " + b;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
   let plot = new Plot();
+  let racines = new Dichotomie(plot);
 });
