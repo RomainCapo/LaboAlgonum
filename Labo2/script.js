@@ -1,10 +1,7 @@
-function getValueFromAssocArray(array){
+/*function getValueFromAssocArray(array){
   let tmp = [];
   for(let key in array){
-    if(array[key] != "Infinity" || array[key] != "-Infinity")
-    {
         tmp.push(array[key]);
-    }
   }
   return tmp;
 }
@@ -15,7 +12,7 @@ class Plot{
     this.ctx = canvas.getContext("2d");//ctx permet de dessiner sur le canvas c'est le contexte
     this.width = canvas.width;
     this.height = canvas.height;
-    this.xRange = 40;
+    this.xRange = 200; // de -100 a 100
 
     this._moveCoordinate();
     this._drawAxis();
@@ -42,7 +39,7 @@ class Plot{
     let yScale = this.height / (maxY - minY);//donne la place que la prends au maximum la fonction sur l'axe Y
 
 
-    this.ctx.scale(xScale, -50);//le signe - permet de renverser le sens de l'axe y
+    this.ctx.scale(xScale, -yScale);//le signe - permet de renverser le sens de l'axe y
   }
 
   //calcule tout les valeurs de la fonction entre min et max
@@ -56,16 +53,8 @@ class Plot{
 
     for(let i = parseFloat(min); i <= max; i+=0.1)
     {
-      let key = i.toFixed(2).toString();
+      let key = i.toString();
       let val = this._function(i);
-      if(val > 10000)
-      {
-        val = "Infinity";
-      }
-      else if (val < -10000)
-      {
-        val = "-Infinity";
-      }
       this.functionValue[key] = val;
     }
     console.log(this.functionValue);
@@ -93,7 +82,7 @@ class Plot{
 
   //function a évaluer
   _function(x){
-    return x / (1 - Math.pow(x,2));
+    return Math.sin(x)-x/13
   }
 
 //dessin de la fonction
@@ -104,12 +93,98 @@ class Plot{
     this.ctx.beginPath();
     for(let i = parseFloat(min); i < max; i+=0.1)
     {
-      console.log("test");
         this.ctx.moveTo(parseFloat(i), this.functionValue[parseFloat(i)]);
         this.ctx.lineTo(parseFloat(i)+ 0.1, this.functionValue[parseFloat(i) + 0.1]);
     }
     this.ctx.stroke();
   }
+}*/
+//http://www.javascripter.net/faq/plotafunctiongraph.htm
+class Plot{
+  constructor(){
+    this.draw();
+
+  }
+
+  fun1(x) {return Math.sin(x) - x/13;  }
+  fun2(x) {return x / (1 - Math.pow(x,2));}
+
+  draw() {
+   let canvas = document.getElementById("canvas");
+
+   let axes={}
+   let ctx=canvas.getContext("2d");
+   axes.x0 = .5*canvas.width;  // x0 pixels from left to x=0
+   axes.y0 = .5*canvas.height; // y0 pixels from top to y=0
+   axes.scale = canvas.width / 200;  // pour avoir toujours le graphe dessiner entre -100 et 100
+
+   this.showAxes(ctx,axes);
+   this.funGraph(ctx,axes,this.fun1,"rgb(11,153,11)");
+   this.funGraph(ctx,axes,this.fun2,"rgb(66,44,255)");
+
+
+  }
+
+  funGraph(ctx,axes,func,color) {
+   let xx, yy;//point qui seront utilisé pour dessiner la fonction
+   let x0=axes.x0;
+   let y0=axes.y0;
+
+   let iMax = Math.round((ctx.canvas.width-x0));
+   let iMin = Math.round(-x0);
+
+  //on définit l'épaisseur de la ligne et la couleur de la fonction
+   ctx.lineWidth = 2;
+   ctx.strokeStyle = color;
+
+   ctx.beginPath();
+   for (var i=iMin;i<=iMax;i+=0.1)
+   {
+    xx = i;
+    yy = 4*axes.scale*func(xx/axes.scale);//ligne a changé, car si on multiplie par un nombre la sortie de la fonction on l'as deforme totalement
+
+    //si c'est la première itération de la boucle
+    if(i==iMin)
+    {
+      ctx.moveTo(x0+xx,y0-yy);
+    }
+    else
+    {
+      ctx.lineTo(x0+xx,y0-yy);
+    }
+   }
+   ctx.stroke();
+  }
+
+  showAxes(ctx,axes) {
+   let w=ctx.canvas.width;
+   let h=ctx.canvas.height;
+   let xmin = 0;
+
+   ctx.beginPath();
+   ctx.strokeStyle = "rgb(128,128,128)";
+     // X axis
+   ctx.moveTo(xmin, axes.y0);
+   ctx.lineTo(w,axes.y0);
+  // Y axis
+   ctx.moveTo(axes.x0, 0);
+   ctx.lineTo(axes.x0,h);
+   ctx.stroke();
+
+   //dessine la graduation sur les axes
+   //7 est pris arbitrairement pour le dessin de la graduation
+   //on dessine un trait tout les 20
+   for(let i = xmin; i < w; i++)
+   {
+     if(i % 20 == 0)
+     {
+       ctx.beginPath();
+       ctx.moveTo(i, axes.y0 + 5);
+       ctx.lineTo(i, axes.y0 - 5);
+       ctx.stroke();
+     }
+   }
+ }
 }
 
 function clickEvent(){
