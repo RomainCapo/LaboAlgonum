@@ -795,12 +795,3 @@ function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
 function or(a, b){return (a || b);}
 
 // ------ Fin code repris sur stackoverflow ----- //
-
-// Division
-
-function division() {
-  let a = document.getElementById('a_division').value;
-  let b = document.getElementById('b_division').value;
-
-  document.getElementById('division').innerHTML = a/b;
-}
