@@ -55,10 +55,10 @@ class Plot{
    //affiche la graduation (temporaire car tres sale)
    for(let i=iMin; i<=iMax;i++)
    {
-     console.log(-80%20);
+     //console.log(-80%20);
      if((i/axes.scale) % 20 == 0)
      {
-       console.log(i/axes.scale);
+       //console.log(i/axes.scale);
        ctx.fillText((i/axes.scale).toString(), x0 + i - 7, y0 - 5);
      }
    }
@@ -103,36 +103,63 @@ function selectEvent(){
   let val = e.options[e.selectedIndex].value;
 }
 
-class Dichotomie {
+
+class Dichotomie{
   constructor(plot){
+	this.a = -100;
+	this.b = 100;
+	this.it = 0;
+	this.tab = [];
     this.plot = plot;
-    this.display();
+    this.display(this.a, this.b);
   }
 
-  display()
+  display(depart, arrive)
   {
-    let a = 3;
-    let b = 20;
     let m = 0;
-
-    while((b-a) > 0)
-    {
-      m = (a+b)/2;
-      if((this.plot.fun2(a) * this.plot.fun2(m)) <= 0)
-      {
-        b = m;
-      }
-      else
-      {
-        a = m;
-      }
-    }
-
-    document.getElementById("racines").innerHTML = "a = " + a + " - b = " + b;
+	let Aarrive = arrive;
+	let Adepart = depart;
+	
+	while((arrive-depart) > 1)
+	{
+		m = (depart+arrive)/2;
+		if((this.plot.fun1(depart) * this.plot.fun1(m)) <= 0)
+		{
+			arrive = m;
+		}
+		else
+		{
+			depart = m;
+		}
+	}
+	if(Aarrive == arrive)
+	{
+		//console.log("h");
+	}
+	else
+	{
+		//Ajouter dans tab le zero, appeler Dichotomie avec 2 nouvelles bornes (lesquelles ?)
+		this.tab[this.it] = depart;
+		this.it++;
+		this.display(this.a, depart - 0.1);
+		//this.it++;
+		//this.display(depart + 0.1, this.b);
+		//console.log(this.tab[this.it]);
+	}
+	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //a changer mettre dans boucle*/
   }
 }
 
+function clickEventAfficher()
+{
+	let plot = new Plot();
+	let racine = new Dichotomie(plot);
+	let tab2 = racine.tab;
+	console.log(tab2);
+	
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
-  let plot = new Plot();
-  let racines = new Dichotomie(plot);
+  //let plot = new Plot();
+  //let racines = new Dichotomie(plot);
 });
