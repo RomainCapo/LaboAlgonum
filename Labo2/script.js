@@ -1,32 +1,69 @@
 //http://www.javascripter.net/faq/plotafunctiongraph.htm
 class Plot{
-  constructor(){
-    this.draw();
-
+  constructor(funIndex, zoom){
+    this.funIndex = funIndex;
+    this.zoom = zoom;
+    this._draw();
   }
 
+  //permet de supprimer tout les éléments du canvas
+  _cleanCanvas(ctx)
+  {
+    ctx.save();//on sauve le contexte du canvas
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);//on utilise la matrice identiée pour retrouver le scale par défaut
+    ctx.clearRect(0, 0, canvas.width, canvas.height);//on clean le canvas
+
+    ctx.restore();//on restore le canvas
+  }
+
+  //représente les 2 fonctions
   fun1(x) {return Math.sin(x) - x/13;  }
   fun2(x) {return x / (1 - Math.pow(x,2));}
 
-  draw() {
+//fonction de dessin sur le canvas
+  _draw() {
    let canvas = document.getElementById("canvas");
 
    let axes={}
    let ctx=canvas.getContext("2d");
-   axes.x0 = .5*canvas.width;  // x0 pixels from left to x=0
-   axes.y0 = .5*canvas.height; // y0 pixels from top to y=0
-   axes.scale = canvas.width / 200;  // pour avoir toujours le graphe dessiner entre -100 et 100
+   //ctx.clearRect(0, 0, canvas.height, canvas.width);
 
-   this.showAxes(ctx,axes);
-   this.funGraph(ctx,axes,this.fun1,"rgb(11,153,11)");
-   this.funGraph(ctx,axes,this.fun2,"rgb(66,44,255)");
+   this._cleanCanvas(ctx);
+
+   axes.x0 = .5*canvas.width;//point tout a gauche du canvas sur l'axe x
+   axes.y0 = .5*canvas.height; //point tout en haut du canvas sur l'axe y
+
+   //on applique différents facteurs en fonction de si l'utilisateurs désire zoomer la fonction
+   if(this.zoom)
+   {//si le graphe doit etre zoomer
+     axes.scale = 40;
+     axes.graduation = 5
+   }
+   else
+   {//si le graphe ne doit pas etre zoomer
+     axes.scale = canvas.width / 200;
+     axes.graduation = 20;
+   }
+
+   this._showAxes(ctx,axes);//on affiche les axes
+
+   if(this.funIndex == 1)
+   {
+     this._funGraph(ctx,axes,this.fun1,"rgb(11,153,11)");
+   }
+   else if(this.funIndex == 2)
+   {
+     this._funGraph(ctx,axes,this.fun2,"rgb(66,44,255)");
+   }
   }
 
-  funGraph(ctx,axes,func,color) {
+  _funGraph(ctx,axes,func,color) {
    let xx, yy;//point qui seront utilisé pour dessiner la fonction
    let x0=axes.x0;
    let y0=axes.y0;
 
+   //borne de dessin de la fonction
    let iMax = Math.round((ctx.canvas.width-x0));
    let iMin = Math.round(-x0);
 
@@ -34,11 +71,12 @@ class Plot{
    ctx.lineWidth = 2;
    ctx.strokeStyle = color;
 
+   //on dessine la courbe entre iMin et iMax par pas de 0.05
    ctx.beginPath();
-   for (let i=iMin;i<=iMax;i+=0.1)
+   for (let i=iMin;i<=iMax;i+=0.05)
    {
     xx = i;
-    yy = 4*axes.scale*func(xx/axes.scale);//ligne a changé, car si on multiplie par un nombre la sortie de la fonction on l'as deforme totalement
+    yy = axes.scale*func(xx/axes.scale);//on calcule le point y et on applique un scale en fonction du résultat
 
     //si c'est la première itération de la boucle
     if(i==iMin)
@@ -52,26 +90,25 @@ class Plot{
    }
    ctx.stroke();
 
-   //affiche la graduation (temporaire car tres sale)
+   //affiche la graduation sur l'axe en fonction du scale
    for(let i=iMin; i<=iMax;i++)
    {
-     //console.log(-80%20);
-     if((i/axes.scale) % 20 == 0)
+     if((i/axes.scale) % axes.graduation == 0)
      {
-       //console.log(i/axes.scale);
-       ctx.fillText((i/axes.scale).toString(), x0 + i - 7, y0 - 5);
+       ctx.fillText((i/axes.scale).toString(), x0 + i - 7, y0 - 5);//les valeur 5 et 7 sont prises arbitrairement pour décaler le texte de la graduation et fonction du graphe
      }
    }
   }
 
-  showAxes(ctx,axes) {
+  //permet de dessiner les axes sur le canvas
+  _showAxes(ctx,axes) {
    let w=ctx.canvas.width;
    let h=ctx.canvas.height;
    let xmin = 0;
 
    ctx.beginPath();
    ctx.strokeStyle = "rgb(128,128,128)";
-     // X axis
+    // X axis
    ctx.moveTo(xmin, axes.y0);
    ctx.lineTo(w,axes.y0);
   // Y axis
@@ -95,12 +132,48 @@ class Plot{
  }
 }
 
-function clickEvent(){
+function selectEvent(){
+  let plotIndex = getSelectValue();
+  let zoom = getRadioValue();
+  let plot = new Plot(plotIndex, zoom);
 }
 
-function selectEvent(){
-  let e = document.getElementById("norme");
+function changeEvent(){
+  let plotIndex = getSelectValue();
+  let zoom = getRadioValue();
+  let plot = new Plot(plotIndex, zoom);
+}
+
+function getRadioValue(){
+  let zoom;
+  let value = document.getElementById("zoom");
+  if(value.checked)
+  {
+    zoom = true;
+  }
+  else
+  {
+    zoom = false;
+  }
+  return zoom;
+}
+
+function getSelectValue(){
+  let e = document.getElementById("equation");
   let val = e.options[e.selectedIndex].value;
+  let plotIndex;
+  if(val == "equa1")
+  {
+    plotIndex = 1;
+  }
+  else if (val == "equa2")
+  {
+    plotIndex = 2;
+  }
+  return plotIndex;
+}
+
+function clickEvent(){
 }
 
 

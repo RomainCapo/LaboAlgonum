@@ -27,6 +27,8 @@
       </div>
       <hr>
       <h2># Draw Plot</h2>
+      <input id="zoom" type="radio" name="zoom" value="zoom" onchange="changeEvent()" checked> Zoom<br>
+      <input type="radio" name="zoom" value="not_zoom" onchange="changeEvent()"> Not zoom<br>
       <select id="equation" name="equation" onchange="selectEvent()">
         <option value="equa1">sin(x) - x/13</option>
         <option value="equa2">x/(1-x^2)</option>
@@ -37,7 +39,15 @@
       <hr>
       <br/>
       <h2>Contextualisation</h2>
+      <p>
+        Dans ce labo 2, la premierè étape consti
+      </p>
       <h2>Méthodologie</h2>
+      <p>
+        La 1ere étape consistait à dessiner le graphe dans un canvas sans librairie de dessin de graphe. Pour effectuer cela, nous avons créer une classe Plot. Cette classe prends 2 parametre, le 1ere étant l'index de la fonction
+        à dessiner et le seconde si la fonction doit etre zoomé. En effet, comme les fonctions doivent être dessiné entre -100 et 100, il se peut que certaine zone des graphes sois illisible. C'est pour cela qu'il est alors possible
+        de selectionner cette option. Il faut noter que dans le cas du zoom, un facteur de 40 est appliqué a chaque point 
+      </p>
       <h2>Source</h2>
     </div>
     <script src="script.js"></script>
