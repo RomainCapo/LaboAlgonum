@@ -184,16 +184,20 @@ class Dichotomie{
 	this.it = 0;
 	this.tab = [];
     this.plot = plot;
-    this.display(this.a, this.b);
+	for(let i = -100; i <100; i++)
+	{
+		this.display(i, i+1, i);
+	}
+    
   }
 
-  display(depart, arrive)
+  display(depart, arrive, i)
   {
     let m = 0;
 	let Aarrive = arrive;
 	let Adepart = depart;
 	
-	while((arrive-depart) > 1)
+	while((arrive-depart) > 0.1)
 	{
 		m = (depart+arrive)/2;
 		if((this.plot.fun1(depart) * this.plot.fun1(m)) <= 0)
@@ -212,9 +216,9 @@ class Dichotomie{
 	else
 	{
 		//Ajouter dans tab le zero, appeler Dichotomie avec 2 nouvelles bornes (lesquelles ?)
-		this.tab[this.it] = depart;
-		this.it++;
-		this.display(this.a, depart - 0.1);
+		this.tab[i] = depart;
+		//this.it++;
+		//this.display(this.a, depart - 0.1);
 		//this.it++;
 		//this.display(depart + 0.1, this.b);
 		//console.log(this.tab[this.it]);
