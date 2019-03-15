@@ -145,49 +145,6 @@ class Plot{
  }
 }
 
-let plot = new Plot(1, true);
-
-function selectEvent(){
-  let plotIndex = getSelectValue();
-  let zoom = getRadioValue();
-  plot = new Plot(plotIndex, zoom);
-}
-
-function changeEvent(){
-  let plotIndex = getSelectValue();
-  let zoom = getRadioValue();
-  plot = new Plot(plotIndex, zoom);
-}
-
-function getRadioValue(){
-  let zoom;
-  let value = document.getElementById("zoom");
-  if(value.checked)
-  {
-    zoom = true;
-  }
-  else
-  {
-    zoom = false;
-  }
-  return zoom;
-}
-
-function getSelectValue(){
-  let e = document.getElementById("equation");
-  let val = e.options[e.selectedIndex].value;
-  let plotIndex;
-  if(val == "equa1")
-  {
-    plotIndex = 1;
-  }
-  else if (val == "equa2")
-  {
-    plotIndex = 2;
-  }
-  return plotIndex;
-}
-
 class Dichotomie{
   constructor(index, plot){
   this.index = index;
@@ -196,13 +153,13 @@ class Dichotomie{
     this.plot = plot;
 	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
 	{
-		this.display(i, i+1, i);
+		this._calculRoots(i, i+1, i);
 	}
 
-  this.ObjectToArray();
+  this._objectToArray();
   }
 
-  display(depart, arrive, i)
+  _calculRoots(depart, arrive, i)
   {
     let m = 0;//sera le milieu
 	if(this.index==2)//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
@@ -249,10 +206,53 @@ class Dichotomie{
 	}
   }
 
-  ObjectToArray(){
+  _objectToArray(){
     this.tab = Object.values(this.tab);
     this.tab = this.tab.sort(function(a, b){return a - b});
   }
+}
+
+let plot = new Plot(1, true);
+
+function selectEvent(){
+  let plotIndex = getSelectValue();
+  let zoom = getRadioValue();
+  plot = new Plot(plotIndex, zoom);
+}
+
+function changeEvent(){
+  let plotIndex = getSelectValue();
+  let zoom = getRadioValue();
+  plot = new Plot(plotIndex, zoom);
+}
+
+function getRadioValue(){
+  let zoom;
+  let value = document.getElementById("zoom");
+  if(value.checked)
+  {
+    zoom = true;
+  }
+  else
+  {
+    zoom = false;
+  }
+  return zoom;
+}
+
+function getSelectValue(){
+  let e = document.getElementById("equation");
+  let val = e.options[e.selectedIndex].value;
+  let plotIndex;
+  if(val == "equa1")
+  {
+    plotIndex = 1;
+  }
+  else if (val == "equa2")
+  {
+    plotIndex = 2;
+  }
+  return plotIndex;
 }
 
 function clickEventDichotomie()
