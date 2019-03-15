@@ -205,8 +205,8 @@ class Dichotomie{
   display(depart, arrive, i)
   {
     let m = 0;//sera le milieu
-	if(this.index==2)//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
-	{
+
+//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
 		if(depart == -1 )
 		{
 			depart = depart + 0.01;
@@ -223,7 +223,7 @@ class Dichotomie{
 		{
 			arrive = arrive - 0.01
 		}
-	}
+    
 	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
 
 	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
