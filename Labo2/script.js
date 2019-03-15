@@ -207,13 +207,32 @@ class Dichotomie{
   display(depart, arrive, i)
   {
     let m = 0;//sera le milieu
+	if(this.index==2)//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
+	{
+		if(depart == -1 )
+		{
+			depart = depart + 0.01;
+		}
+		if(depart == 1)
+		{
+			depart = depart + 0.01;
+		}
+		if(arrive == -1)
+		{
+			arrive = arrive - 0.01
+		}
+		if(arrive == 1)
+		{
+			arrive = arrive - 0.01
+		}
+	}
 	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
 
 	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
 	{
 		m = (depart+arrive)/2;//on met m au milieu
 		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
-		if((this.plot.fun(depart, this.index) * this.plot.fun1(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
+		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
 		{
 			arrive = m;//On bouge la borne de droite
 		}
@@ -227,9 +246,9 @@ class Dichotomie{
 	}
 	else//sinon, on a trouvé une racine
 	{
+		console.log(depart,arrive);
 	this.tab[i] = depart;//on met la racine dans tab
 	}
-	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //sert à afficher sur la page, à remanier
   }
 
   ObjectToArray(){
