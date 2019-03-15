@@ -1,4 +1,4 @@
-let plot;
+
 
 //http://www.javascripter.net/faq/plotafunctiongraph.htm
 class Plot{
@@ -149,6 +149,8 @@ class Plot{
  }
 }
 
+let plot = new Plot(1, true);
+
 function selectEvent(){
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
@@ -262,7 +264,6 @@ function clickEventDichotomie()
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
 
-  let plot = new Plot(plotIndex, zoom);
 	let racines = new Dichotomie(plotIndex, plot);
   plot.drawRoot(racines.tab);
 
@@ -275,5 +276,5 @@ function clickEventDichotomie()
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-	let plot = new Plot(1, true);
+	plot = new Plot(1, true);
 });
