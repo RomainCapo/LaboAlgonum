@@ -1,4 +1,4 @@
-let plot;
+
 
 //http://www.javascripter.net/faq/plotafunctiongraph.htm
 class Plot{
@@ -149,6 +149,8 @@ class Plot{
  }
 }
 
+let plot = new Plot(1, true);
+
 function selectEvent(){
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
@@ -213,7 +215,7 @@ class Dichotomie{
 	{
 		m = (depart+arrive)/2;//on met m au milieu
 		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
-		if((this.plot.fun(depart, this.index) * this.plot.fun1(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
+		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
 		{
 			arrive = m;//On bouge la borne de droite
 		}
@@ -243,7 +245,6 @@ function clickEventDichotomie()
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
 
-  let plot = new Plot(plotIndex, zoom);
 	let racines = new Dichotomie(plotIndex, plot);
   plot.drawRoot(racines.tab);
 
@@ -256,5 +257,5 @@ function clickEventDichotomie()
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-	let plot = new Plot(1, true);
+	plot = new Plot(1, true);
 });
