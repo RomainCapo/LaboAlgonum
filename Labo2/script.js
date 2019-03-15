@@ -19,10 +19,6 @@ class Plot{
     this.ctx.restore();//on restore le canvas
   }
 
-  //représente les 2 fonctions
-  fun1(x) {return Math.sin(x) - x/13;  }
-  fun2(x) {return x / (1 - Math.pow(x,2));}
-
   fun(x, i){
     switch (i) {
       case 1:
@@ -138,7 +134,7 @@ class Plot{
    //on dessine un trait tout les 20
    for(let i = xmin; i < w; i++)
    {
-     if(i/4 % 20 == 0)
+     if(i/this.axes.scale % this.axes.graduation == 0)
      {
        this.ctx.beginPath();
        this.ctx.moveTo(i, this.axes.y0 + 5);
