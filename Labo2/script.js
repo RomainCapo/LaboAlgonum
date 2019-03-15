@@ -22,7 +22,7 @@ class Plot{
   fun(x, i){
     switch (i) {
       case 1:
-        return Math.sin(x) - x/13;
+      return Math.sin(x) - x/13;
         break;
       case 2:
         return x / (1 - Math.pow(x,2));
