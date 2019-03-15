@@ -179,8 +179,6 @@ function clickEvent(){
 
 class Dichotomie{
   constructor(plot){
-	this.a = -100;
-	this.b = 100;
 	this.it = 0;
 	this.tab = [];
     this.plot = plot;
@@ -215,13 +213,7 @@ class Dichotomie{
 	}
 	else
 	{
-		//Ajouter dans tab le zero, appeler Dichotomie avec 2 nouvelles bornes (lesquelles ?)
-		this.tab[i] = depart;
-		//this.it++;
-		//this.display(this.a, depart - 0.1);
-		//this.it++;
-		//this.display(depart + 0.1, this.b);
-		//console.log(this.tab[this.it]);
+	this.tab[i] = depart;
 	}
 	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //a changer mettre dans boucle*/
   }
