@@ -182,7 +182,7 @@ class Dichotomie{
 	this.it = 0;
 	this.tab = [];
     this.plot = plot;
-	for(let i = -100; i <100; i++)
+	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
 	{
 		this.display(i, i+1, i);
 	}
@@ -191,44 +191,41 @@ class Dichotomie{
 
   display(depart, arrive, i)
   {
-    let m = 0;
-	let Aarrive = arrive;
-	let Adepart = depart;
+    let m = 0;//sera le milieu
+	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
 	
-	while((arrive-depart) > 0.1)
+	while((arrive-depart) > 0.1)//difference entre les deux bornes (on peut mettre bien plus petit)
 	{
-		m = (depart+arrive)/2;
-		if((this.plot.fun1(depart) * this.plot.fun1(m)) <= 0)
+		m = (depart+arrive)/2;//on met m au milieu
+		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
+		if((this.plot.fun1(depart) * this.plot.fun1(m)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
 		{
-			arrive = m;
+			arrive = m;//On bouge la borne de droite
 		}
 		else
 		{
-			depart = m;
+			depart = m;//On bouge la borne de gauche si c'est les même signe
 		}
 	}
-	if(Aarrive == arrive)
+	if(Aarrive == arrive)//si la borne de droite n'a pas bougé, on fait rien
 	{
-		//console.log("h");
 	}
-	else
+	else//sinon, on a trouvé une racine
 	{
-	this.tab[i] = depart;
+	this.tab[i] = depart;//on met la racine dans tab
 	}
-	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //a changer mettre dans boucle*/
+	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //sert à afficher sur la page, à remanier
   }
 }
 
 function clickEventAfficher()
 {
-	let plot = new Plot();
-	let racine = new Dichotomie(plot);
-	let tab2 = racine.tab;
-	console.log(tab2);
-	
+	//bouton ne sert plus à rien, (on peut supprimer avec le bouton)
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  //let plot = new Plot();
-  //let racines = new Dichotomie(plot);
+	let plot = new Plot();
+	let racines = new Dichotomie(plot);
+  	let tab2 = racines.tab;
+	console.log(tab2);
 });
