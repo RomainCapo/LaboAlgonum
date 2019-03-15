@@ -197,7 +197,9 @@ class Dichotomie{
   this.index = index;
 	this.it = 0;
 	this.tab = [];
+	this.tabError = [];
     this.plot = plot;
+	this.indexTab = 0;
 	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
 	{
 		this.display(i, i+1, i);
@@ -208,6 +210,7 @@ class Dichotomie{
 
   display(depart, arrive, i)
   {
+	let j = 0;
     let m = 0;//sera le milieu
 	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
 
@@ -223,6 +226,8 @@ class Dichotomie{
 		{
 			depart = m;//On bouge la borne de gauche si c'est les même signe
 		}
+		
+		j++;
 	}
 	if(Aarrive == arrive)//si la borne de droite n'a pas bougé, on fait rien
 	{
@@ -230,8 +235,14 @@ class Dichotomie{
 	else//sinon, on a trouvé une racine
 	{
 	this.tab[i] = depart;//on met la racine dans tab
+	this.tabError[this.indexTab++] = this.errorAlgo(depart, arrive, j);
 	}
 	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //sert à afficher sur la page, à remanier
+  }
+  
+  errorAlgo(a, b, n)
+  {
+	return (b-a)/(Math.pow(2, n+1));
   }
 
   ObjectToArray(){
@@ -250,10 +261,14 @@ function clickEventDichotomie()
 
   let roots = document.getElementById("roots");
   roots.innerHTML = '';
-  roots.innerHTML += "roots : ";
+  roots.innerHTML += "<h2>Roots : </h2><br>";
+  let i = 0;
   Object.keys(racines.tab).forEach(key => {
-     roots.innerHTML += racines.tab[key] + "; ";
+     roots.innerHTML += i + " : " + racines.tab[key] + " avec comme erreur : " + racines.tabError[i] + ";<br>";
+	 i++;
   });
+  
+  console.log(racines.tabError);
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
