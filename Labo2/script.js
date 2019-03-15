@@ -19,10 +19,6 @@ class Plot{
     this.ctx.restore();//on restore le canvas
   }
 
-  //représente les 2 fonctions
-  fun1(x) {return Math.sin(x) - x/13;  }
-  fun2(x) {return x / (1 - Math.pow(x,2));}
-
   fun(x, i){
     switch (i) {
       case 1:
@@ -138,7 +134,7 @@ class Plot{
    //on dessine un trait tout les 20
    for(let i = xmin; i < w; i++)
    {
-     if(i/4 % 20 == 0)
+     if(i/this.axes.scale % this.axes.graduation == 0)
      {
        this.ctx.beginPath();
        this.ctx.moveTo(i, this.axes.y0 + 5);
@@ -147,6 +143,84 @@ class Plot{
      }
    }
  }
+}
+
+class Dichotomie{
+  constructor(index, plot){
+  this.index = index;
+	this.it = 0;
+	this.tab = [];
+	this.tabError = [];
+    this.plot = plot;
+	this.indexTab = 0;
+	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
+	{
+		this._calculRoots(i, i+1, i);
+	}
+
+  this._objectToArray();
+  }
+
+  _calculRoots(depart, arrive, i)
+  {
+	let j = 0;
+    let m = 0;//sera le milieu
+	if(this.index==2)//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
+	{
+		if(depart == -1 )
+		{
+			depart = depart + 0.01;
+		}
+		if(depart == 1)
+		{
+			depart = depart + 0.01;
+		}
+		if(arrive == -1)
+		{
+			arrive = arrive - 0.01
+		}
+		if(arrive == 1)
+		{
+			arrive = arrive - 0.01
+		}
+	}
+	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
+
+	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
+	{
+		m = (depart+arrive)/2;//on met m au milieu
+		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
+		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
+		{
+			arrive = m;//On bouge la borne de droite
+		}
+		else
+		{
+			depart = m;//On bouge la borne de gauche si c'est les même signe
+		}
+		
+		j++;
+	}
+	if(Aarrive == arrive)//si la borne de droite n'a pas bougé, on fait rien
+	{
+	}
+	else//sinon, on a trouvé une racine
+	{
+		console.log(depart,arrive);
+	this.tab[i] = depart;//on met la racine dans tab
+	this.tabError[this.indexTab++] = this.errorAlgo(depart, arrive, j);
+	}
+  }
+  
+  errorAlgo(a, b, n)
+  {
+	return (b-a)/(Math.pow(2, n+1));
+  }
+
+  _objectToArray(){
+    this.tab = Object.values(this.tab);
+    this.tab = this.tab.sort(function(a, b){return a - b});
+  }
 }
 
 let plot = new Plot(1, true);
@@ -190,65 +264,6 @@ function getSelectValue(){
     plotIndex = 2;
   }
   return plotIndex;
-}
-
-class Dichotomie{
-  constructor(index, plot){
-  this.index = index;
-	this.it = 0;
-	this.tab = [];
-	this.tabError = [];
-    this.plot = plot;
-	this.indexTab = 0;
-	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
-	{
-		this.display(i, i+1, i);
-	}
-
-  this.ObjectToArray();
-  }
-
-  display(depart, arrive, i)
-  {
-	let j = 0;
-    let m = 0;//sera le milieu
-	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
-
-	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
-	{
-		m = (depart+arrive)/2;//on met m au milieu
-		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
-		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
-		{
-			arrive = m;//On bouge la borne de droite
-		}
-		else
-		{
-			depart = m;//On bouge la borne de gauche si c'est les même signe
-		}
-		
-		j++;
-	}
-	if(Aarrive == arrive)//si la borne de droite n'a pas bougé, on fait rien
-	{
-	}
-	else//sinon, on a trouvé une racine
-	{
-	this.tab[i] = depart;//on met la racine dans tab
-	this.tabError[this.indexTab++] = this.errorAlgo(depart, arrive, j);
-	}
-	//document.getElementById("racines").innerHTML = "a = " + tab[i]; //sert à afficher sur la page, à remanier
-  }
-  
-  errorAlgo(a, b, n)
-  {
-	return (b-a)/(Math.pow(2, n+1));
-  }
-
-  ObjectToArray(){
-    this.tab = Object.values(this.tab);
-    this.tab = this.tab.sort(function(a, b){return a - b});
-  }
 }
 
 function clickEventDichotomie()
