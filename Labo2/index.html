@@ -53,6 +53,15 @@
         à dessiner et le seconde si la fonction doit etre zoomé. En effet, comme les fonctions doivent être dessiné entre -100 et 100, il se peut que certaine zone des graphes sois illisible. C'est pour cela qu'il est alors possible
         de selectionner cette option. Il faut noter que dans le cas du zoom, un facteur de 40 est appliqué a chaque point
       </p>
+	  <p>
+		Nous avons donc utiliser la dichotomie afin de trouver les racines des graphes. Cependant, l'utilisation de la dichotomie dans la recherche de racine sur une fonction
+		ne doit se faire uniquement sur des fonctions continues et avec des bornes de départ d'un coté et d'un autre d'une et uniquement une racine.
+		Notre problème s'est donc avérer complexe étant donné que nous ne pouvions difficilement faire une méthode générique pour trouver les racines.
+		Nous avons donc essayer d'être le plus générique possible. Pour la première fonction sin(x) - x/13, nous prenons donc 200 bornes différentes, allant de -100 à -99, -99 à -98, etc...
+		Nous aurions aussi pu prendre uniquement des bornes autour des racines mais le fait de le faire de cette facon permettais une plus grande généricité de notre méthode. Il ne fallait juste pas que la
+		fonction ait 2 racines à moins de 0.5 d'écart. Pour la deuxième fonction x/(1-x^2), nous avons donc coder une fonction dans notre classe Dichotomie qui calcule les asymptotes afin
+		d'utiliser la dichotomie correctement.
+	  </p>
 	  <h2>Conclusion</h2>
 	  <p>Pour conclure, nous avons donc pu réaliser ce qui nous était demandé dans la consigne du laboratoire 2. C'est-à-dire de dessiner sur un graphe la représentation visuelle des deux fonctions qui nous avait été proposées, et d'ensuite trouver les racines de chaque fonction ainsi que le calcul de l'erreur absolue de l'algorithme de la Dichotomie.</p>
 	  <p>Le dessin du graphe nous a pris beaucoup de temps, à savoir que nous l'avons réalisé entièrement en javascript, sans l'aide d'aucune librairie externe. Il y a la possibilité de changer de fonction en utilisant la liste déroulante, et de choisir si l'on veut un zoom ou non.</p>
