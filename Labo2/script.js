@@ -165,6 +165,8 @@ class Dichotomie{
 
 //permet de calculer les asymptotes afin de les retirer du resultat final
 //car les asymptotes ne doivent pas etre compté comme des racines
+//cette méthode ne fonctionne que pour les fonctions avec des asymptotes entières
+//on rappelle que la méthode de dichotomie n'est pas fait pour etre utilisé sur des fonctions non continues
   _calculAsy(){
   this.asymptote = [];
     for(let i = -100; i<100;i++)
@@ -187,7 +189,7 @@ class Dichotomie{
   	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
   	{
   		m = (depart+arrive)/2;//on met m au milieu
-  		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
+
   		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
   		{
   			arrive = m;//On bouge la borne de droite
