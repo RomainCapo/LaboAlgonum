@@ -35,15 +35,43 @@
       <br/>
       <h2>Contextualisation</h2>
       <p>
-        Dans ce labo 2, la premierè étape consti
+        Dans le cadre de la leçon d'Algorithme numérique, qui fait partie du module de sciences, il nous a été demandé de réaliser un algorithme en javascript capable de dessiner un graphe selon une fonction, et de trouver ensuite les racines de cette fonction à l'aide d'une méthode à choix (Dichotomie, Pente (Newton), Point fixe).
       </p>
+	  <p>Voici les fonctions à notre disposition :</p>
+	  <ul>
+		<li><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>sin</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>-</mo><mfrac><mi>x</mi><mn>13</mn></mfrac><mo>=</mo><mn>0</mn></math></li>
+		<li><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mi>x</mi><mrow><mn>1</mn><mo>-</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac><mo>=</mo><mn>0</mn></math></li>
+	  </ul>
+	  <p>Nous devons donc trouver toutes les arcines comprises dans l'interval [-100;100]</p>
+	  <h4>Choix méthode :</h4>
+	  <p>Nous avons choisi la méthode de la <em>Dichotomie</em>.</p>
+	  <p>Chaque méthode impliquait de mettre en place une contrainte énoncée dans la donnée du labo. En l'occurence, pour la technique de la dichotomie, il était question de calculer l'erreur de l'algorithme pour chaque calcul d'une racine<p>
+
       <h2>Méthodologie</h2>
       <p>
         La 1ere étape consistait à dessiner le graphe dans un canvas sans librairie de dessin de graphe. Pour effectuer cela, nous avons créer une classe Plot. Cette classe prends 2 parametre, le 1ere étant l'index de la fonction
         à dessiner et le seconde si la fonction doit etre zoomé. En effet, comme les fonctions doivent être dessiné entre -100 et 100, il se peut que certaine zone des graphes sois illisible. C'est pour cela qu'il est alors possible
         de selectionner cette option. Il faut noter que dans le cas du zoom, un facteur de 40 est appliqué a chaque point
       </p>
+	  <p>
+		Nous avons donc utiliser la dichotomie afin de trouver les racines des graphes. Cependant, l'utilisation de la dichotomie dans la recherche de racine sur une fonction
+		ne doit se faire uniquement sur des fonctions continues et avec des bornes de départ d'un coté et d'un autre d'une et uniquement une racine.
+		Notre problème s'est donc avérer complexe étant donné que nous ne pouvions difficilement faire une méthode générique pour trouver les racines.
+		Nous avons donc essayer d'être le plus générique possible. Pour la première fonction sin(x) - x/13, nous prenons donc 200 bornes différentes, allant de -100 à -99, -99 à -98, etc...
+		Nous aurions aussi pu prendre uniquement des bornes autour des racines mais le fait de le faire de cette facon permettais une plus grande généricité de notre méthode. Il ne fallait juste pas que la
+		fonction ait 2 racines à moins de 0.5 d'écart. Pour la deuxième fonction x/(1-x^2), nous avons donc coder une fonction dans notre classe Dichotomie qui calcule les asymptotes afin
+		d'utiliser la dichotomie correctement.
+	  </p>
+	  <h2>Conclusion</h2>
+	  <p>Pour conclure, nous avons donc pu réaliser ce qui nous était demandé dans la consigne du laboratoire 2. C'est-à-dire de dessiner sur un graphe la représentation visuelle des deux fonctions qui nous avait été proposées, et d'ensuite trouver les racines de chaque fonction ainsi que le calcul de l'erreur absolue de l'algorithme de la Dichotomie.</p>
+	  <p>Le dessin du graphe nous a pris beaucoup de temps, à savoir que nous l'avons réalisé entièrement en javascript, sans l'aide d'aucune librairie externe. Il y a la possibilité de changer de fonction en utilisant la liste déroulante, et de choisir si l'on veut un zoom ou non.</p>
+	  <p>Nous avons également un algorithme qui trouve l'ensemble des racines existantes pour chaque fonction, et les dessine sur le graphe correspondant.</p>
+	  <p>Lorsque l'on appuie sur le bouton "Afficher les racines", une liste des valeurs des racines est affichée, avec l'erreur absolue à son côté.</p>
       <h2>Source</h2>
+	  <ul>
+		<li>https://fr.wikipedia.org/wiki/M%C3%A9thode_de_dichotomie</li>
+	  </ul>
+	  <br><br>
     </div>
     <script src="script.js"></script>
   </body>

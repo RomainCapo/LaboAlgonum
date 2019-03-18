@@ -147,79 +147,95 @@ class Plot{
 
 class Dichotomie{
   constructor(index, plot){
-  this.index = index;
-	this.it = 0;
-	this.tab = [];
-    this.plot = plot;
+  this.index = index;//index de la fonction a dessiner
+	this.tab = [];//tableau contenant les racines
+	this.tabError = [];//tableau contenant les erreurs du calcul des racines
+  this.plot = plot;
+	this.indexTab = 0;
+
+  this._calculAsy();//calcule des asymptotes
+
 	for(let i = -100; i <100; i++) //BOUCLE POUR APPELER LA FONCTION DISPLAY (DE -100 à -99, DE -99 à -98, etc)
 	{
 		this._calculRoots(i, i+1, i);
 	}
 
-  this._objectToArray();
+  this._getFinalRootsArray();
+  }
+
+//permet de calculer les asymptotes afin de les retirer du resultat final
+//car les asymptotes ne doivent pas etre compté comme des racines
+  _calculAsy(){
+  this.asymptote = [];
+    for(let i = -100; i<100;i++)
+    {
+      let y = this.plot.fun(i, this.index);//valeur retourner par la fonction
+
+      if(y == "Infinity" || y == "-Infinity" || y == "undefined")//si la fonction a une de ces valeurs c'est qu'il y a une asymptote
+      {
+        this.asymptote.push(i);//on place l'asymptote dans le tableau
+      }
+    }
   }
 
   _calculRoots(depart, arrive, i)
   {
+	  let j = 0;
     let m = 0;//sera le milieu
-	if(this.index==2)//test si pas asymptote (la dichotomie n'est pas fonctionelle pour les fonctions non continue, donc on décale la borne de 0.01 pour ne pas prendre l'asymptote en compte)
-	{
-		if(depart == -1 )
-		{
-			depart = depart + 0.01;
-		}
-		if(depart == 1)
-		{
-			depart = depart + 0.01;
-		}
-		if(arrive == -1)
-		{
-			arrive = arrive - 0.01
-		}
-		if(arrive == 1)
-		{
-			arrive = arrive - 0.01
-		}
-	}
-	let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
+	  let Aarrive = arrive;//Sert à tester si à la fin, la norme arrive n'a pas bougé (si c'est le cas, on n'a pas trouvé de racine, à part p-e sur la borne elle-meme et ca sera testé dans le prochain display grâce à la boucle)
 
-	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
-	{
-		m = (depart+arrive)/2;//on met m au milieu
-		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
-		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
-		{
-			arrive = m;//On bouge la borne de droite
-		}
-		else
-		{
-			depart = m;//On bouge la borne de gauche si c'est les même signe
-		}
-	}
-	if(Aarrive == arrive)//si la borne de droite n'a pas bougé, on fait rien
-	{
-	}
-	else//sinon, on a trouvé une racine
-	{
-		console.log(depart,arrive);
-	this.tab[i] = depart;//on met la racine dans tab
-	}
+  	while((arrive-depart) > 0.01)//difference entre les deux bornes (on peut mettre bien plus petit)
+  	{
+  		m = (depart+arrive)/2;//on met m au milieu
+  		//changer la ligne du dessous de fun1 à fun2 aux 2 endroits afin de changer de graphe
+  		if((this.plot.fun(depart, this.index) * this.plot.fun(m, this.index)) <= 0)//si les deux bornes ont des signes différentes dans le graphe, on bouge la borne de droite (c'est sur qu'on aura une racine)
+  		{
+  			arrive = m;//On bouge la borne de droite
+  		}
+  		else
+  		{
+  			depart = m;//On bouge la borne de gauche si c'est les même signe
+  		}
+
+  		j++;
+  	}
+  	if(Aarrive != arrive)//si la borne de droite a bougé on a trouvé une racine
+  	{
+  	this.tab[i] = depart;//on met la racine dans tab
+  	this.tabError[this.indexTab++] = this.errorAlgo(depart, arrive, j);
+  	}
   }
 
-  _objectToArray(){
-    this.tab = Object.values(this.tab);
-    this.tab = this.tab.sort(function(a, b){return a - b});
+  //permet de calculer l'erreur effectuer par la methode de dichotomie
+  errorAlgo(a, b, n)
+  {
+	return (b-a)/(Math.pow(2, n+1));
+  }
+
+  //permet d'obtenir le tableau des racines dans le format voulu
+  _getFinalRootsArray(){
+    this.tab = Object.values(this.tab);//on recupere les valeurs contenu dans l'objets dans le but de le transformer en tableau
+    this.tab = this.tab.sort(function(a, b){return a - b});//on trie le tableau dans l'ordre croissant
+
+    //prototype permettant de rajouter la fonction diff pour les tableaux
+    Array.prototype.diff = function(a) {
+      return this.filter(function(i) {return a.indexOf(i) < 0;});
+    };
+
+    this.tab = this.tab.diff(this.asymptote);//on enleve les asymptotes au racines trouvée préceddement
   }
 }
 
-let plot = new Plot(1, true);
+let plot = new Plot(1, true);//graphe de base
 
+//lors de la selection d'un graphe dans la select box
 function selectEvent(){
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
   plot = new Plot(plotIndex, zoom);
 }
 
+//lors d'un changement d'etat des radios buttons
 function changeEvent(){
   let plotIndex = getSelectValue();
   let zoom = getRadioValue();
@@ -261,14 +277,17 @@ function clickEventDichotomie()
   let zoom = getRadioValue();
 
 	let racines = new Dichotomie(plotIndex, plot);
-  plot.drawRoot(racines.tab);
+  plot.drawRoot(racines.tab);//dessin des racines
 
   let roots = document.getElementById("roots");
   roots.innerHTML = '';
-  roots.innerHTML += "roots : ";
+  roots.innerHTML += "<h2>Roots : </h2><br>";
+  let i = 0;
+
   Object.keys(racines.tab).forEach(key => {
-     roots.innerHTML += racines.tab[key] + "; ";
-  });
+     roots.innerHTML += i + " : " + racines.tab[key] + " avec comme erreur : " + racines.tabError[i] + ";<br>";
+	 i++;
+ });
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
