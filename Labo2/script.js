@@ -161,21 +161,23 @@ class Dichotomie{
 	}
 
   this._getFinalRootsArray();
+  //this._floatArrayDiff(this.tab, this.asymptote, 0.1);
   }
 
 //permet de calculer les asymptotes afin de les retirer du resultat final
 //car les asymptotes ne doivent pas etre compté comme des racines
+//point toFixed permet d'arrondir le nombre a 2 chiffre après la virgule
   _calculAsy(){
   this.asymptote = [];
-    for(let i = -100; i<100;i++)
+    for(let i = -100; i<100;i+=0.1)
     {
-      let y = this.plot.fun(i, this.index);//valeur retourner par la fonction
-
+      let y = this.plot.fun(i.toFixed(2), this.index);//valeur retourner par la fonction
       if(y == "Infinity" || y == "-Infinity" || y == "undefined")//si la fonction a une de ces valeurs c'est qu'il y a une asymptote
       {
-        this.asymptote.push(i);//on place l'asymptote dans le tableau
+        this.asymptote.push(parseFloat(i.toFixed(2)));//on place l'asymptote dans le tableau
       }
     }
+    console.log(this.asymptote);
   }
 
   _calculRoots(depart, arrive, i)
@@ -222,8 +224,25 @@ class Dichotomie{
       return this.filter(function(i) {return a.indexOf(i) < 0;});
     };
 
-    this.tab = this.tab.diff(this.asymptote);//on enleve les asymptotes au racines trouvée préceddement
+    this.tab = this.tab.diff(this.asymptote);//on enleve les asymptotes au racines trouvée préceddement*/
   }
+
+  /*_floatArrayDiff(array1, array2, precision){
+    let tmp = [];
+    array1[1] = 1.01;
+    console.log("array1: " + array1);
+    for(let i = 0; i< array1.length; i++)
+    {
+      for(let j = 0; j < array2.length; j++)
+      {
+        if(!(array1[i] >= array2[j] - 0.1 && array1[i] <= array2[j] + 0.1))
+        {
+          console.log(i);
+        }
+      }
+    }
+    console.log(tmp);
+  }*/
 }
 
 let plot = new Plot(1, true);//graphe de base
