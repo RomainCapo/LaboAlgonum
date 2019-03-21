@@ -26,46 +26,27 @@ class Matrix{
   return Object.keys(object).find(key => object[key] === value);
 }
 
-  /*//trouve la valeur maximal dans une collone de la matrice, indexLineStart permet de preciser a partir de quelle ligne on prends les valeurs pour le maximum
+  //trouve la valeur maximal dans une collone de la matrice, indexLineStart permet de preciser a partir de quelle ligne on prends les valeurs pour le maximum
   argmax(indexColumn, indexLineStart = 0){
     let tmp = [];
     for(let i = 0; i < this.size; i++)
     {
       if(i >= indexLineStart)
       {
-        tmp[i] = this.matrix[i][indexColumn];
+        tmp[i] = Math.abs(this.matrix[i][indexColumn]);
       }
     }
     //trouve la valeur maximum dans un objet javascript
     //code repris de https://stackoverflow.com/questions/11142884/fast-way-to-get-the-min-max-values-among-properties-of-object
     let max = Object.values(tmp).sort((prev, next) => next - prev)[0];
     return this._getKeyByValue(tmp, max);
-  }*/
+  }
 
+  //echange 2 ligne de la matrice selon i et j
   swapRows(i,j){
-    this.matrix[j] = [this.matrix[i], this.matrix[i] = this.matrix[j]][0]; // Swap 2 rows
-  }
-
-  //Substract factor*iRowRef to iRowSub
-  substractLineFactor(iRowRef, iRowSub, factor, iColumnStart=0){
-    for(let i=iColumnStart; i<this.size+1; ++i) {
-      this.matrix[iRowSub][i] -= this.matrix[iRowRef][i] * factor;
-    }
-  }
-
-  argmax1(iColumn,iRowStart=0){ //Find the greatest element in the column starting at iRowStart abd return the indice of this line
-    let iMax=iRowStart;
-    let max = Math.abs(this.matrix[iRowStart][iColumn]);
-    let tempMax = 0;
-
-    for(let i=iRowStart+1;i<this.size;++i){
-      tempMax = Math.abs(this.matrix[i][iColumn]);
-      if(max < tempMax){
-        max = tempMax,
-        iMax = i;
-      }
-    }
-    return iMax;
+    let tmp = this.matrix[i];
+    this.matrix[i] = this.matrix[j];
+    this.matrix[j] = tmp;
   }
 }
 
@@ -73,9 +54,7 @@ class MatrixSolver{
   constructor(){
     this.x = [];
   }
-
     _gaussMatrixTransform(matrix){
-
       let m = matrix.size;//nombre de ligne
       let n = matrix.matrix[0].length;//nombre de collone
 
@@ -84,9 +63,9 @@ class MatrixSolver{
       let f = 0;
       let i_max = 0;
 
-      while(h < m && k < n)
+      while(h < m)
       {
-        i_max = matrix.argmax1(k,h);
+        i_max = matrix.argmax(k,h);
         if(matrix.matrix[i_max][k] == 0)
         {
           console.log("pas de solution constante");
@@ -99,14 +78,16 @@ class MatrixSolver{
           {
             f = matrix.matrix[i][k] / matrix.matrix[h][k];
             matrix.matrix[i][k] = 0;
-            matrix.substractLineFactor(h,i,f,k+1);
+
+            for(let j=k+1; j<matrix.size+1; j++) {
+              matrix.matrix[i][j] -= matrix.matrix[h][j] * f;
+            }
           }
           h++;
           k++;
         }
       }
   }
-
 }
 
 function readTextFile(file, callback) {
