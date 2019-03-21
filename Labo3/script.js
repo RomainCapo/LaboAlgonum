@@ -26,8 +26,8 @@ class Matrix{
   return Object.keys(object).find(key => object[key] === value);
 }
 
-  //trouve la valeur maximal dans une collone de la matrice, indexLineStart permet de preciser a partir de quelle ligne on prends les valeurs pour le maximum
-  argmax(indexColumn, indexLineStart){
+  /*//trouve la valeur maximal dans une collone de la matrice, indexLineStart permet de preciser a partir de quelle ligne on prends les valeurs pour le maximum
+  argmax(indexColumn, indexLineStart = 0){
     let tmp = [];
     for(let i = 0; i < this.size; i++)
     {
@@ -40,10 +40,6 @@ class Matrix{
     //code repris de https://stackoverflow.com/questions/11142884/fast-way-to-get-the-min-max-values-among-properties-of-object
     let max = Object.values(tmp).sort((prev, next) => next - prev)[0];
     return this._getKeyByValue(tmp, max);
-  }
-
-  /*swapRows(i, j){
-
   }*/
 
   swapRows(i,j){
@@ -55,6 +51,21 @@ class Matrix{
     for(let i=iColumnStart; i<this.size+1; ++i) {
       this.matrix[iRowSub][i] -= this.matrix[iRowRef][i] * factor;
     }
+  }
+
+  argmax1(iColumn,iRowStart=0){ //Find the greatest element in the column starting at iRowStart abd return the indice of this line
+    let iMax=iRowStart;
+    let max = Math.abs(this.matrix[iRowStart][iColumn]);
+    let tempMax = 0;
+
+    for(let i=iRowStart+1;i<this.size;++i){
+      tempMax = Math.abs(this.matrix[i][iColumn]);
+      if(max < tempMax){
+        max = tempMax,
+        iMax = i;
+      }
+    }
+    return iMax;
   }
 }
 
@@ -73,10 +84,9 @@ class MatrixSolver{
       let f = 0;
       let i_max = 0;
 
-      while(h < m)
+      while(h < m && k < n)
       {
-        i_max = matrix.argmax(k,h);
-
+        i_max = matrix.argmax1(k,h);
         if(matrix.matrix[i_max][k] == 0)
         {
           console.log("pas de solution constante");
@@ -96,6 +106,7 @@ class MatrixSolver{
         }
       }
   }
+
 }
 
 function readTextFile(file, callback) {
@@ -135,7 +146,8 @@ function changeEvent(){
 document.addEventListener("DOMContentLoaded", function(event) {
   readTextFile("json/matrice_3x3.json", function(text){
       let matrix = new Matrix(text);
-      console.log(matrix.matrix);
+      //console.log(matrix);
+      //console.log(matrix.argmax1(1,1));
       let solver = new MatrixSolver();
       solver._gaussMatrixTransform(matrix);
       console.log(matrix.matrix);
