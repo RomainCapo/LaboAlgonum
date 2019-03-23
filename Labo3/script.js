@@ -11,7 +11,7 @@ class Matrix{
   _load(data){
     data = JSON.parse(data);
 
-    //recupération des infos contenu dans le fich
+    //recupération des infos contenu dans le fichier
     this.size = data.n[0];
     let A = data.A.splice(0);
     let B = data.B.splice(0);
@@ -58,7 +58,7 @@ class MatrixSolver{
 
     this._gaussMatrixTransform(matrix);
     this._findSolution(matrix);
-    console.log(this.x);
+    this._displaySolutions(this.x); 
   }
 
   //effectue la transformation de gauss sur une matrice afin de la rendre triangulaire
@@ -106,6 +106,23 @@ class MatrixSolver{
             matrix.matrix[j][matrix.size] -= matrix.matrix[j][i] * this.x[i];
         }
     }
+  }
+
+  //Méthode qui s'occupe de l'affichage des résultats du système d'équations
+  _displaySolutions(equationSolutionsArray)
+  {
+      let innerText = "";
+
+      innerText += "Résultats du système d'équations : <br>";
+
+      for(let i = 0; i < equationSolutionsArray.length; i++)
+      {
+        innerText += "<strong>X<sub>" + i + "</sub></strong> : " + equationSolutionsArray[i] + "<br>";
+      }
+
+      innerText += "<hr>";
+
+      document.getElementById('displaySolutions').innerHTML = innerText;
   }
 }
 
