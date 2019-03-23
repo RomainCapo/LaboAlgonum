@@ -6,6 +6,8 @@ class Matrix{
     this._load(data);
   }
 
+  //permet de parser le contenu du fichier JSON puis de crééer la matrice via
+  // un tableau 2 dimension
   _load(data){
     data = JSON.parse(data);
 
@@ -51,10 +53,17 @@ class Matrix{
 }
 
 class MatrixSolver{
-  constructor(){
-    this.x = [];
+  constructor(matrix){
+    this.x = [];//contient les résultats du ssytème d'équation
+
+    this._gaussMatrixTransform(matrix);
+    this._findSolution(matrix);
+    console.log(this.x);
   }
-    _gaussMatrixTransform(matrix){
+
+  //effectue la transformation de gauss sur une matrice afin de la rendre triangulaire
+  // https://en.wikipedia.org/wiki/Gaussian_elimination
+  _gaussMatrixTransform(matrix){
       let m = matrix.size;//nombre de ligne
       let n = matrix.matrix[0].length;//nombre de collone
 
@@ -88,9 +97,21 @@ class MatrixSolver{
         }
       }
   }
+
+  //cherche les solutions du système d'equation a partir d'une matrice triangulaire
+  _findSolution(matrix){
+    for (let i=matrix.size-1; i >= 0; i--) {
+        this.x[i] = matrix.matrix[i][matrix.size]/matrix.matrix[i][i];
+        for (let j=i-1; j >= 0; j--) {
+            matrix.matrix[j][matrix.size] -= matrix.matrix[j][i] * this.x[i];
+        }
+    }
+  }
 }
 
-function readTextFile(file, callback) {
+//permet de lire le contenu du fichier json
+//méthode trouver sur https://stackoverflow.com/questions/19706046/how-to-read-an-external-local-json-file-in-javascript/19706080
+function readJsonFile(file, callback) {
     var rawFile = new XMLHttpRequest();
     rawFile.overrideMimeType("application/json");
     rawFile.open("GET", file, true);
@@ -102,35 +123,50 @@ function readTextFile(file, callback) {
     rawFile.send(null);
 }
 
-function getJson(){
-
+//gestion de l'évnement lors du clic sur le bouton calculer
+function clickEvent(){
+  readJsonFile("json/" + getFileName(), function(text){
+      let matrix = new Matrix(text);
+      let solver = new MatrixSolver(matrix);
+  });
 }
 
-
-
-/*function getRadioValue(){
+//retourne la valeur du radioButton selectionné
+function getRadioValue(){
   let radios = document.getElementsByName('matrix');
 
   for(let i = 0; i < radios.length; i++)
   {
     if(radios[i].checked)
     {
-      console.log(radios[i].value);
+      return radios[i].value
     }
   }
 }
 
-function changeEvent(){
-  getRadioValue();
-}*/
+//récupére le nom du fichier selon la valeur du radioButton selectionné
+function getFileName(){
+  let filename = "";
+  switch (getRadioValue()) {
+    case "3x3":
+      filename = "matrice_3x3.json";
+      break;
+    case "3x3A0":
+      filename = "matrice_avecPB_3x3_avec_A_a_0.json";
+      break;
+    case "3x3Swap":
+      filename = "matrice_avecPB_3x3_avec_SwapObligatoire.json";
+      break;
+    case "210x210":
+      filename = "matrice_210x210.json";
+      break;
+    case "310x310":
+      filename = "matrice_310x310.json";
+      break;
+  }
+  return filename;
+}
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  readTextFile("json/matrice_3x3.json", function(text){
-      let matrix = new Matrix(text);
-      //console.log(matrix);
-      //console.log(matrix.argmax1(1,1));
-      let solver = new MatrixSolver();
-      solver._gaussMatrixTransform(matrix);
-      console.log(matrix.matrix);
-  });
+
 });
