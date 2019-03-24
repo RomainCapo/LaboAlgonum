@@ -54,10 +54,23 @@ class Matrix{
 
 class MatrixSolver{
   constructor(matrix){
-    this.x = [];//contient les résultats du ssytème d'équation
+    this.x = [];//contient les résultats du système d'équation
 
+	
+	let startDate = new Date();
+    startDate = startDate.getMilliseconds();
+	
     this._gaussMatrixTransform(matrix);
     this._findSolution(matrix);
+	
+	let endDate = new Date();
+	endDate = endDate.getMilliseconds();
+	
+	var diff = endDate - startDate;
+	console.log(diff);
+	diff = 'Le temps de calcul est de : ' + diff + ' millisecondes';
+	document.getElementById('time').innerHTML = diff;
+	
     this._displaySolutions(this.x); 
   }
 
