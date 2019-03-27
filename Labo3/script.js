@@ -17,9 +17,11 @@ class Matrix{
   constructor(data){
     this.matrix = [];
     this.size = 0;
+	this.error = false;
 
     this._load(data);
   }
+  
 
   //permet de parser le contenu du fichier JSON puis de crééer la matrice via
   // un tableau 2 dimension
@@ -76,17 +78,24 @@ class MatrixSolver{
     startDate = startDate.getMilliseconds();
 	
     this._gaussMatrixTransform(matrix);
-    this._findSolution(matrix);
+	if(!matrix.error)
+	{
+		this._findSolution(matrix);
+		this._displaySolutions(this.x);
+	}
+	else
+	{
+		document.getElementById('displaySolutions').innerHTML = "<p>no solution found or infinite solution</p>";
+	}
 	
 	let endDate = new Date();
 	endDate = endDate.getMilliseconds();
 	
 	var diff = endDate - startDate;
-	console.log(diff);
 	diff = 'Le temps de calcul est de : ' + diff + ' millisecondes';
 	document.getElementById('time').innerHTML = diff;
 	
-    this._displaySolutions(this.x); 
+    
   }
 
   //effectue la transformation de gauss sur une matrice afin de la rendre triangulaire
@@ -106,6 +115,8 @@ class MatrixSolver{
         if(matrix.matrix[i_max][k] == 0)
         {
           console.log("pas de solution constante");
+		  matrix.error = true;
+		  break;
         }
         else
         {
@@ -129,10 +140,11 @@ class MatrixSolver{
   //cherche les solutions du système d'equation a partir d'une matrice triangulaire
   _findSolution(matrix){
     for (let i=matrix.size-1; i >= 0; i--) {
-        this.x[i] = matrix.matrix[i][matrix.size]/matrix.matrix[i][i];
-        for (let j=i-1; j >= 0; j--) {
-            matrix.matrix[j][matrix.size] -= matrix.matrix[j][i] * this.x[i];
-        }
+
+		this.x[i] = matrix.matrix[i][matrix.size]/matrix.matrix[i][i];
+		for (let j=i-1; j >= 0; j--) {
+			matrix.matrix[j][matrix.size] -= matrix.matrix[j][i] * this.x[i];
+		}
     }
   }
 
