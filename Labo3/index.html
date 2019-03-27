@@ -43,7 +43,23 @@
 		</p>
 		<p>Pour réseoudre ce problème, nous avons utilisé 2 classes : 
 		<ul>
-			<li>Matrix :</li>
+			<li>
+				<h2>Matrix :</h2>
+				<p>Cette classe s'occupe de gérer le stockage de la matrice</p>
+				<ul>
+					<li><h3>_load() : </h3>Permet de générer la matrice à partir du fichier JSON. On place par la suite, les valeurs de la matric ainsi que le vecteur B dans un tableau 2 dimsensions.</li>
+					<li><h3>argmax() : </h3>Permet de trouver la valeur maximal dans une collone de la matrice, renvoie ensuite l'index, le 1er arg est l'index de la colonne et le second l'index de la ligne ou l'on commence a prendre en compte le maximum.</li>
+					<li><h3>swapRows</h3>Echange 2 ligne de la matrice.</li>
+				</ul>
+			</li>
+			<li>
+				<h2>MatrixSolver :</h2>
+				<p>Cette calsse permet de résoudre le système d'equation a partir d'une matrice</p>
+				<ul>
+					<li><h3>_gaussMatrixTransform()</h3>Permet de triangulariser la matrice. Nous avons utilisé le pseudo code de la page wikipédia sur l'elimination de gauss afin de résoudre ce problème.</li>
+					<li><h3>_findSolution()</h3>Permet de trouver les solutions du système d'équation a partir d'une matrice triangularisé.</li>
+					<li><h3>_displaySolutions()</h3>Permet d'afficher les solutions du système d'équation.</li>
+				</ul>
 		</ul>
 		<p>
 		Nous n'avons pas eu besoin du détérminant afin de calculer les solutions avec cette méthode. Cependant, le calcul du détérminant est très simple étant donné qu'il consiste à
@@ -52,6 +68,12 @@
 		 La méthode utilisée est très rapide au niveau du calcul, même pour des grandes matrices.
 		 De plus, le fait d'obtenir une matrice triangulaire peut s'avérer très pratique comme quand on doit calculer le détérminant.
       <h2>Source</h2>
+	  <ul>
+		<li>Cours de Monsieur Gobron</li>
+		<li>https://en.wikipedia.org/wiki/Gaussian_elimination</li>
+		<li>https://www.tutorialspoint.com/How-to-create-a-two-dimensional-array-in-JavaScript</li>
+		<li>https://martin-thoma.com/solving-equations-of-upper-triangular-matrices/</li>
+	  </ul>
     </div>
     <script src="script.js"></script>
   </body>
