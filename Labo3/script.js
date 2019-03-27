@@ -1,3 +1,18 @@
+/* 
+Algorithme numérique - Labo 3
+
+Auteurs : 
+
+- Capocasale Romain
+- Moulin Vincent
+- Jurasz Loic
+
+Date de création : 20.03.2019
+
+Classe : dlm-A
+
+Équipe numéro : 3
+*/
 class Matrix{
   constructor(data){
     this.matrix = [];
