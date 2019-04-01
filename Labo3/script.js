@@ -19,14 +19,7 @@ class Matrix{
     this.size = 0;
 	this.error = false;
 
-    this._load(data);
-  }
-  
-
-  //permet de parser le contenu du fichier JSON puis de crééer la matrice via
-  // un tableau 2 dimension
-  _load(data){
-    data = JSON.parse(data);
+	data = JSON.parse(data);//permet de parser le contenu du fichier JSON
 
     //recupération des infos contenu dans le fichier
     this.size = data.n[0];
@@ -34,6 +27,7 @@ class Matrix{
     let B = data.B.splice(0);
 
     //transformation en tableau 2 dimension selon la taille de la matrice
+	//on concatène la matrice A directement avec le veteur B
     while(A.length)
     {
       this.matrix.push(A.splice(0,this.size).concat(B.splice(0,1)));
@@ -46,7 +40,7 @@ class Matrix{
 }
 
   //trouve la valeur maximal dans une collone de la matrice, indexLineStart permet de preciser a partir de quelle ligne on prends les valeurs pour le maximum
-  argmax(indexColumn, indexLineStart = 0){
+  argmax(indexColumn, indexLineStart){
     let tmp = [];
     for(let i = 0; i < this.size; i++)
     {
@@ -109,7 +103,7 @@ class MatrixSolver{
       let f = 0;
       let i_max = 0;
 
-      while(h < m)
+      while(h < m && k < n)
       {
         i_max = matrix.argmax(k,h);
         if(matrix.matrix[i_max][k] == 0)

@@ -34,39 +34,41 @@
       <br/>
         <h2>Contextualisation</h2>
 		Dans le cadre du cours d'algorithme numérique, il nous a été demandé de déterminer les solutions d'un système d'équations linéaires. 
-		La matrice se trouve stocké dans un fichier JSON qu'il faut lire et converir en matrice à l'aide d'un tableau 2 dimension.
+		La matrice se trouve stocké dans un fichier JSON qu'il faut lire et converir en matrice à l'aide d'un tableau 2 dimension. Nous devons par la suite triangularisé cette matrice 
+		afin de pouvoir trouver chaques solutions.
         <h2>Méthodologie</h2>
 		<p>
 		On nous a donc fourni avec divers système d'équations linéaires sous forme de matrice.
 		Nous avons utilisé la méthode de Gauss afin de trouver les solutions de ces matrices fournies. Nous avons d'abord créé une fonction afin de transformer les matrices
 		données en matrices triangulaires. Depuis ces matrices, nous pouvions trouver les solutions en resolvant les équations.
 		</p>
-		<p>Pour réseoudre ce problème, nous avons utilisé 2 classes : 
+		<p>Pour résoudre ce problème, nous avons utilisé 2 classes : 
 		<ul>
 			<li>
 				<h2>Matrix :</h2>
-				<p>Cette classe s'occupe de gérer le stockage de la matrice</p>
+				<p>Cette classe s'occupe de gérer le stockage de la matrice et contient les principales méthodes qui permet d'effectuer les traitements sur la matrice.</p>
 				<ul>
-					<li><h3>_load() : </h3>Permet de générer la matrice à partir du fichier JSON. On place par la suite, les valeurs de la matric ainsi que le vecteur B dans un tableau 2 dimsensions.</li>
-					<li><h3>argmax() : </h3>Permet de trouver la valeur maximal dans une collone de la matrice, renvoie ensuite l'index, le 1er arg est l'index de la colonne et le second l'index de la ligne ou l'on commence a prendre en compte le maximum.</li>
-					<li><h3>swapRows</h3>Echange 2 ligne de la matrice.</li>
+					<li><h3>constructor(data) : </h3>Prends comme paramètre le flux JSON. Par la suite on génére la matrice à partir du fichier JSON. On place les valeurs de la matrice ainsi que le vecteur B dans un tableau 2 dimsensions contenu dans this.matrix.</li>
+					<li><h3>argmax(indexColumn, indexLineStart) : </h3>Permet de trouver la valeur maximal dans une collone de la matrice, renvoie ensuite l'index, le 1er arg est l'index de la colonne et le second l'index de la ligne ou l'on commence a prendre en compte le maximum.</li>
+					<li><h3>swapRows(i,j) : </h3>Echange 2 ligne de la matrice selon les indice spécifiés en parametres.</li>
 				</ul>
 			</li>
 			<li>
 				<h2>MatrixSolver :</h2>
 				<p>Cette calsse permet de résoudre le système d'equation a partir d'une matrice</p>
 				<ul>
-					<li><h3>_gaussMatrixTransform()</h3>Permet de triangulariser la matrice. Nous avons utilisé le pseudo code de la page wikipédia sur l'elimination de gauss afin de résoudre ce problème.</li>
-					<li><h3>_findSolution()</h3>Permet de trouver les solutions du système d'équation a partir d'une matrice triangularisé.</li>
-					<li><h3>_displaySolutions()</h3>Permet d'afficher les solutions du système d'équation.</li>
+					<li><h3>constructor(matrix) : </h3>On passe en argument la matrice. On s'occuper ensuite d'appeler les methodes de triangularisation et de résolution. Pour finir, on traite le cas ou la matrice n'a aucune solution et on calcul le temps qu'a pris l'algorithme pour trouver les solutions.</li>
+					<li><h3>_gaussMatrixTransform(matrix) : </h3>Permet de triangulariser la matrice. Nous avons utilisé le pseudo code de la page wikipédia sur l'elimination de gauss afin de résoudre ce problème. On passe en parametre la matrice. Nous utilisons les différentes fonctions de la classe matrice pour effectuer les transformations sur celle-ci.</li>
+					<li><h3>_findSolution(matrix) : </h3>Permet de trouver les solutions du système d'équation a partir d'une matrice triangularisé. Nous utilisons la méthode vu en cours pour trouver les solutions.</li>
+					<li><h3>_displaySolutions(equationSolutionsArray) : </h3>Permet d'afficher les solutions du système d'équation. On passe en parametre les solutions du système.</li>
 				</ul>
 		</ul>
 		<p>
-		Nous n'avons pas eu besoin du détérminant afin de calculer les solutions avec cette méthode. Cependant, le calcul du détérminant est très simple étant donné qu'il consiste à
-		multiplier la diagonale de la matrice triangulariser et faire *(-1) pour chaque changement de lignes éffectués.
+		<!--Nous n'avons pas eu besoin du détérminant afin de calculer les solutions avec cette méthode. Cependant, le calcul du détérminant est très simple étant donné qu'il consiste à
+		multiplier la diagonale de la matrice triangulariser et faire *(-1) pour chaque changement de lignes éffectués.-->
 	     <h2>Conclusion</h2>
 		 La méthode utilisée est très rapide au niveau du calcul, même pour des grandes matrices.
-		 De plus, le fait d'obtenir une matrice triangulaire peut s'avérer très pratique comme quand on doit calculer le détérminant.
+		 De plus, le fait d'obtenir une matrice triangulaire peut s'avérer très pratique comme quand on doit calculer le détérminant. Nous avons effectué les tests sur les matrices fourni et nous arrivons a des résultats conculants.
       <h2>Source</h2>
 	  <ul>
 		<li>Cours de Monsieur Gobron</li>
