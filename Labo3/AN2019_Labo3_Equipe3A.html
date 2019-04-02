@@ -2,41 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Labo 3</title>
-    <link rel="stylesheet" href="/theme/css/base.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>AN2019_Labo3_Equipe3A</title>
 	</style>
   </head>
   <body>
-    <div class="container">
-      <br>
-      <br>
-      <h1>Algorithme numérique - Labo 3</h1>
-      <p>Auteurs:</p>
-          <ul>
-            <li>Romain Capocasale</li>
-            <li>Vincent Moulin</li>
-            <li>Loïc Jurasz</li>
-          </ul>
+	  <br>
+	  <br>
+	  <h1>Algorithme numérique - Labo 3</h1>
+	  <p>Auteurs:</p>
+		  <ul>
+			<li>Romain Capocasale</li>
+			<li>Vincent Moulin</li>
+			<li>Loïc Jurasz</li>
+		  </ul>
 		<p>Date de création : 20.03.2019</p>
 		<p>Classe : dlm-A</p>
 		<p>Équipe numéro : 3</p>
-      <hr>
-      <input type="radio" name="matrix" value="3x3" checked> matrice 3x3 <br>
-      <input type="radio" name="matrix" value="3x3A0"> matrice 3x3 avec A à 0 <br>
-      <input type="radio" name="matrix" value="3x3Swap"> matrice 3x3 avec swap obligatoire <br>
-	    <input type="radio" name="matrix" value="210x210"> matrice 210x210 <br>
-	    <input type="radio" name="matrix" value="310x310"> matrice 310x310 <br>
-      <input type="submit" name="calculer" value="Calculer" onclick="clickEvent()">
+	  <hr>
+	  <input type="radio" name="matrix" value="3x3" checked> matrice 3x3 <br>
+	  <input type="radio" name="matrix" value="3x3A0"> matrice 3x3 avec A à 0 <br>
+	  <input type="radio" name="matrix" value="3x3Swap"> matrice 3x3 avec swap obligatoire <br>
+		<input type="radio" name="matrix" value="210x210"> matrice 210x210 <br>
+		<input type="radio" name="matrix" value="310x310"> matrice 310x310 <br>
+	  <input type="submit" name="calculer" value="Calculer" onclick="clickEvent()">
 	  <span id = "time" ></span>
-      <hr>
-      <span id="displaySolutions"></span>
-      <br/>
-        <h2>Contextualisation</h2>
+	  <hr>
+	  <span id="displaySolutions"></span>
+	  <br/>
+		<h2>Contextualisation</h2>
 		Dans le cadre du cours d'algorithme numérique, il nous a été demandé de déterminer les solutions d'un système d'équations linéaires. 
 		La matrice se trouve stocké dans un fichier JSON qu'il faut lire et converir en matrice à l'aide d'un tableau 2 dimension. Nous devons par la suite triangularisé cette matrice 
 		afin de pouvoir trouver chaques solutions.
-        <h2>Méthodologie</h2>
+		<h2>Méthodologie</h2>
 		<p>
 		On nous a donc fourni avec divers système d'équations linéaires sous forme de matrice.
 		Nous avons utilisé la méthode de Gauss afin de trouver les solutions de ces matrices fournies. Nous avons d'abord créé une fonction afin de transformer les matrices
@@ -66,17 +63,16 @@
 		<p>
 		<!--Nous n'avons pas eu besoin du détérminant afin de calculer les solutions avec cette méthode. Cependant, le calcul du détérminant est très simple étant donné qu'il consiste à
 		multiplier la diagonale de la matrice triangulariser et faire *(-1) pour chaque changement de lignes éffectués.-->
-	     <h2>Conclusion</h2>
+		 <h2>Conclusion</h2>
 		 La méthode utilisée est très rapide au niveau du calcul, même pour des grandes matrices.
 		 De plus, le fait d'obtenir une matrice triangulaire peut s'avérer très pratique comme quand on doit calculer le détérminant. Nous avons effectué les tests sur les matrices fourni et nous arrivons a des résultats conculants.
-      <h2>Source</h2>
+	  <h2>Source</h2>
 	  <ul>
 		<li>Cours de Monsieur Gobron</li>
 		<li>https://en.wikipedia.org/wiki/Gaussian_elimination</li>
 		<li>https://www.tutorialspoint.com/How-to-create-a-two-dimensional-array-in-JavaScript</li>
 		<li>https://martin-thoma.com/solving-equations-of-upper-triangular-matrices/</li>
 	  </ul>
-    </div>
     <script src="script.js"></script>
   </body>
 </html>
