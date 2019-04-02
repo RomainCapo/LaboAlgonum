@@ -22,7 +22,6 @@ function myFunction()
 {
 	console.log("test")
 	let p = functionPlot({
-	  title: 'cos(x) - cos\'(x) - cos\'\'(x)',
 	  target: '#chart',
 	  width: 800,
 	  height: 500,
