@@ -18,20 +18,18 @@ window.onload = function(){
 	generateChart()
 };
 
+// GenerateChart
 function generateChart()
 {
-	dataPoints = [];
+	let dataPoints = [];
 
-    for(let i = 0; i < 15; i++)
+    for(let i = -10; i < 11; i++)
     {
+		let tmp = [];
+		tmp.push([i,i]);
+		
         d = {
-            points: [
-			  [1, 1],
-			  [2, 1],
-			  [2, 2],
-			  [1, 2],
-			  [1, 1]
-			],
+            points: tmp,
             fnType: 'points',
             graphType: 'polyline'
             };
@@ -57,6 +55,7 @@ function generateChart()
 	})
 }
 
+// Approximate cos using Taylor
 function cosTaylorApproximate(theta, iteration=50)
 {
 	let cos = 0;
@@ -69,6 +68,7 @@ function cosTaylorApproximate(theta, iteration=50)
 	return cos;
 }
 
+// Return the factor of a number
 function factor(n)
 {
 	if (n == 0) {
