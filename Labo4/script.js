@@ -15,28 +15,31 @@ Classe : dlm-A
 */
 
 window.onload = function(){
-	generateChart()
+	let tabPoints = [];
+	
+	tabPoints[0] = generateTabPoints(cosTaylorApproximate);
+	tabPoints[1] = generateTabPoints(firstDerivate);
+	tabPoints[2] = generateTabPoints(secondDerivate);
+	
+	console.log(tabPoints)
+	
+	generateChart(tabPoints);
 };
 
 // GenerateChart
-function generateChart()
+function generateChart(tabPoints)
 {
 	let dataPoints = [];
 
-    for(let i = -10; i < 11; i++)
+    for(let i = 0; i < tabPoints.length; i++)
     {
-		let tmp = [];
-		tmp.push([i,i]);
-		
         d = {
-            points: tmp,
+            points: tabPoints[i],
             fnType: 'points',
             graphType: 'polyline'
             };
         dataPoints.push(d);
     }
-
-	//console.log(cosTaylorApproximate(2*Math.PI));
 	
 	let p = functionPlot({
 	  target: '#chart',
@@ -45,14 +48,27 @@ function generateChart()
 	  grid: true,
 	  xAxis: {
 		label: 'x - axis',
-		domain: [-6, 6]
+		domain: [-5, 5]
 	  },
 	  yAxis: {
 		label: 'y - axis',
-		domain: [-4, 4]
+		domain: [-2.5, 2.5]
 	  },
+	  disableZoom: true,
 	  data: dataPoints
 	})
+}
+
+function generateTabPoints(func)
+{
+	let points = [];
+	
+	for(let i = -5; i < 5; i+=0.1)
+	{
+		points.push([i,func(i)]);
+	}
+	
+	return points;
 }
 
 // Approximate cos using Taylor
@@ -80,16 +96,16 @@ function factor(n)
 	} 
 }
 
-function firstDerivate(f, theta, n, h)
+function firstDerivate(theta, n=200, h=0.001)
 {
-    let numerator = 8*(f(theta+h/2, n)-f(theta-h/2,n)) - f(theta + h, n) + f(theta - h, n);
+    let numerator = 8*(cosTaylorApproximate(theta+h/2, n)-cosTaylorApproximate(theta-h/2,n)) - cosTaylorApproximate(theta + h, n) + cosTaylorApproximate(theta - h, n);
     let denominator = 6*h;
     return numerator / denominator;
 }
 
-function secondDerivate(f, theta, n, h)
+function secondDerivate(theta, n=200, h=0.001)
 {
-    let numerator = f(theta + h, n) + f(theta - h, n) - 2*f(theta, n);
+    let numerator = cosTaylorApproximate(theta + h, n) + cosTaylorApproximate(theta - h, n) - 2*cosTaylorApproximate(theta, n);
     let denominator = h*h;
     return numerator / denominator;
 }
