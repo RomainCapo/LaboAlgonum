@@ -21,8 +21,6 @@ window.onload = function(){
 	tabPoints[1] = generateTabPoints(firstDerivate);
 	tabPoints[2] = generateTabPoints(secondDerivate);
 	
-	console.log(tabPoints)
-	
 	generateChart(tabPoints);
 };
 
