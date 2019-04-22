@@ -7,79 +7,78 @@
     <script src="https://unpkg.com/function-plot@1/dist/function-plot.js"></script>
   </head>
   <body>
-    <div class="container">
-		<h1>Algorithme numérique - Labo 4</h1>
-		<p>Auteurs:</p>
+	<h1>Algorithme numérique - Labo 4</h1>
+	<p>Auteurs:</p>
+	<ul>
+	<li>Romain Capocasale</li>
+	<li>Vincent Moulin</li>
+	<li>Loïc Jurasz</li>
+	</ul>
+	<p>Date de création : 27.03.2019</p>
+	<p>Classe : dlm-A</p>
+	<p>Équipe numéro : 3</p>
+	<hr>
+	<div id="result">
+		<span class='legend' style='color:red'>(y = cos(x))</span>
+		<span class='legend' style='color:blue'>(y = cos'(x))</span>
+		<span class='legend' style='color:green'>(y = cos''(x))</span>
+		<div id='chart'></div>
+	</div>
+	<h2>Bonus</h2>
+	<p>
+		Nous n'avons pas eu le temps de réaliser graphiquement le bonus. Cepandant nous avons tout de même chercher a résoudre le problème. Le meilleure angle pour mimiser le temps est un angle de <strong>90°</strong>. Nous avons réalisé nos calcule avec les valeurs suivante : 
 		<ul>
-		<li>Romain Capocasale</li>
-		<li>Vincent Moulin</li>
-		<li>Loïc Jurasz</li>
+			<li>vitesse dans l'eau : 2m/s</li>
+			<li>vitesse sur terre : 4m/s</li>
+			<li>diametre du lac : 200m</li>
 		</ul>
-		<p>Date de création : 27.03.2019</p>
-		<p>Classe : dlm-A</p>
-		<p>Équipe numéro : 3</p>
-		<hr>
-        <div id="result">
-            <span class='legend' style='color:red'>(y = cos(x))</span>
-            <span class='legend' style='color:blue'>(y = cos'(x))</span>
-            <span class='legend' style='color:green'>(y = cos''(x))</span>
-			<div id='chart'></div>
-		</div>
-		<h2>Bonus</h2>
-		<p>
-			Nous n'avons pas eu le temps de réaliser graphiquement le bonus. Cepandant nous avons tout de même chercher a résoudre le problème. Le meilleure angle pour mimiser le temps est un angle de <strong>90°</strong>. Nous avons réalisé nos calcule avec les valeurs suivante : 
-			<ul>
-				<li>vitesse dans l'eau : 2m/s</li>
-				<li>vitesse sur terre : 4m/s</li>
-				<li>diametre du lac : 200m</li>
-			</ul>
-			Avec ces différentes valeurs et un angle de 90 degré, c'est la que nous avons obtenu le meilleur temps. Le temps était d'environ 78,5 seconde.
-		</p>
-		<hr/>
-		<br/>
-		<h2>Contextualisation</h2>
-		<p>
-			Le but de ce laboratoire est de représenter la fonction cosinus aisni que sa 1ere et seconde derivées sur un graphe. Pour réaliser cela nous n'avons pas le droit d'utiliser les fonction trigonometrique.
-			Nous devons utiliser les aproximations de ces fonctions. Pour le cosinus nous utilisons la série de taylor et pour les dérivé la derivation numérique.
-		</p>
-		<h2>Métodologie et développement</h2>
-		<p>
-			Pour le dessin du graphe, nous avons utilisé la librairie suivante : <a href="https://github.com/mauriciopoppe/function-plot">https://github.com/mauriciopoppe/function-plot</a>.
-		</p>
-		<p>
-			<ul>
-				<li>Pour la fonction cosinus nous avons utiliser l'approximation suivante : <img src="image/cosinus.png"/> </li>
-				<li>Pour sa 1ere derivée nous avons utilisé cette formule : <img src="image/derivate1.png"/></li>
-				<li>Et pour la seconde derivée nous avons utilisé cette formule : <img src="image/derivate2.png"/></li>
-			</ul>
-			
-		</p>
-		<p>
-			Pour la 1ere derivée, nous avons une erreur qui est en O(h4) ce qui est plutot pas mal. Par contre pour la seconde dérivée, on peut remarquer que l'approximation est plutot mauvaise vu son erreur en O(h).
-			Nous avons tout de même utilisé cette formule étant donné que c'est la formule présenté dans le cours et que nous avions bien compris la démonstration de celle ci. De plus, on peut voir que sur le graphique que entre -5 et 5, la dérivé est correctement représenté. 
-		</p>
-		<p>
-			Pour ce qui est du code voici les différentes fonctions que nous avons utilisés : 
-			<ul>
-				<li><strong>cosTaylorApproximate(theta, iteration=50) : </strong> Permet de calculer la serie de taylor de la fonction cosinus pour un theta donnée. On peut également précisé le nombre d'itération voulu. Pour calculer le denominateur, nous utilisons la fonction <strong>factor(n)</strong> qui permet de calculer le factoriel d'un nombre.</li>
-				<li><strong>firstDerivate(theta, n=200, h=0.001) : </strong> Permet d'approximer, la 1ere derivée en un point donnée. le parametre n représente le nombre d'iteration et h le delta des derivées</li>
-				<li><strong>secondDerivate(theta, n=200, h=0.001) : </strong> La meme chose mais pour la seconde derivée.</li>
-				<li><strong>generateTabPoints(func) : </strong>Permet de générer le tableau de point de la fonction entre -5 et 5 dans le but d'etre dessiné ultérieurement. La fonction prends en parametre le callback d'une fontion.</li>
-				<li><strong>generateChart(tabPoints) : </strong> Permet de générer le graphe avec la librairie selon le tableau de point passé en parametre.</li>
-			</ul>
-			Dans la fonction principale (window.onload), on s'occupe simplement de générer le tableau de point pour chacune des fonctions puis on effctue l'affichage.
-		</p>
-		<h2>Conclusion</h2>
-		<p>
-			Nous arrivons a dessiner correctement les différentes fonctions qui nous était demandé. L'erreur sur les différentes approximation est plutot bonne sauf pour la 2eme derivée. Il aurait été intérensant de pouvoir faire rentrer les différents parametre comme n et h a l'utilisateur pour plus d'interaction et pour mieux se rendre compte des approximation effectuées.
-		</p>
-		<h2>Source</h2>
+		Avec ces différentes valeurs et un angle de 90 degré, c'est la que nous avons obtenu le meilleur temps. Le temps était d'environ 78,5 seconde.
+	</p>
+	<hr/>
+	<br/>
+	<h2>Contextualisation</h2>
+	<p>
+		Le but de ce laboratoire est de représenter la fonction cosinus aisni que sa 1ere et seconde derivées sur un graphe. Pour réaliser cela nous n'avons pas le droit d'utiliser les fonction trigonometrique.
+		Nous devons utiliser les aproximations de ces fonctions. Pour le cosinus nous utilisons la série de taylor et pour les dérivé la derivation numérique.
+	</p>
+	<h2>Métodologie et développement</h2>
+	<p>
+		Pour le dessin du graphe, nous avons utilisé la librairie suivante : <a href="https://github.com/mauriciopoppe/function-plot">https://github.com/mauriciopoppe/function-plot</a>.
+	</p>
+	<p>
 		<ul>
-			<li>Cours de M.Gobron</li>
-			<li>https://stackoverflow.com/questions/39388107/javascript-sin-cosin-taylor-expansion</li>
-			<li>https://stackoverflow.com/questions/27234243/recursive-algorithm-for-cos-taylor-series-expansion-c</li>
+			<li>Pour la fonction cosinus nous avons utiliser l'approximation suivante : <img src="image/cosinus.png"/> </li>
+			<li>Pour sa 1ere derivée nous avons utilisé cette formule : <img src="image/derivate1.png"/></li>
+			<li>Et pour la seconde derivée nous avons utilisé cette formule : <img src="image/derivate2.png"/></li>
 		</ul>
-    </div>
+		
+	</p>
+	<p>
+		Pour la 1ere derivée, nous avons une erreur qui est en O(h4) ce qui est plutot pas mal. Par contre pour la seconde dérivée, on peut remarquer que l'approximation est plutot mauvaise vu son erreur en O(h).
+		Nous avons tout de même utilisé cette formule étant donné que c'est la formule présenté dans le cours et que nous avions bien compris la démonstration de celle ci. De plus, on peut voir que sur le graphique que entre -5 et 5, la dérivé est correctement représenté. 
+	</p>
+	<p>
+		Pour ce qui est du code voici les différentes fonctions que nous avons utilisés : 
+		<ul>
+			<li><strong>cosTaylorApproximate(theta, iteration=50) : </strong> Permet de calculer la serie de taylor de la fonction cosinus pour un theta donnée. On peut également précisé le nombre d'itération voulu. Pour calculer le denominateur, nous utilisons la fonction <strong>factor(n)</strong> qui permet de calculer le factoriel d'un nombre.</li>
+			<li><strong>firstDerivate(theta, n=200, h=0.001) : </strong> Permet d'approximer, la 1ere derivée en un point donnée. le parametre n représente le nombre d'iteration et h le delta des derivées</li>
+			<li><strong>secondDerivate(theta, n=200, h=0.001) : </strong> La meme chose mais pour la seconde derivée.</li>
+			<li><strong>generateTabPoints(func) : </strong>Permet de générer le tableau de point de la fonction entre -5 et 5 dans le but d'etre dessiné ultérieurement. La fonction prends en parametre le callback d'une fontion.</li>
+			<li><strong>generateChart(tabPoints) : </strong> Permet de générer le graphe avec la librairie selon le tableau de point passé en parametre.</li>
+		</ul>
+		Dans la fonction principale (window.onload), on s'occupe simplement de générer le tableau de point pour chacune des fonctions puis on effctue l'affichage.
+	</p>
+	<h2>Conclusion</h2>
+	<p>
+		Nous arrivons a dessiner correctement les différentes fonctions qui nous était demandé. L'erreur sur les différentes approximation est plutot bonne sauf pour la 2eme derivée. Il aurait été intérensant de pouvoir faire rentrer les différents parametre comme n et h a l'utilisateur pour plus d'interaction et pour mieux se rendre compte des approximation effectuées.
+	</p>
+	<h2>Source</h2>
+	<ul>
+		<li>Cours de M.Gobron</li>
+		<li>https://stackoverflow.com/questions/39388107/javascript-sin-cosin-taylor-expansion</li>
+		<li>https://stackoverflow.com/questions/27234243/recursive-algorithm-for-cos-taylor-series-expansion-c</li>
+		<li>https://mauriciopoppe.github.io/function-plot/</li>
+	</ul>
   </body>
   <script src="script.js"></script>
 </html>
