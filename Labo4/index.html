@@ -63,7 +63,7 @@
 			<li><strong>cosTaylorApproximate(theta, iteration=50) : </strong> Permet de calculer la serie de taylor de la fonction cosinus pour un theta donnée. On peut également précisé le nombre d'itération voulu. Pour calculer le denominateur, nous utilisons la fonction <strong>factor(n)</strong> qui permet de calculer le factoriel d'un nombre.</li>
 			<li><strong>firstDerivate(theta, n=200, h=0.001) : </strong> Permet d'approximer, la 1ere derivée en un point donnée. le parametre n représente le nombre d'iteration et h le delta des derivées</li>
 			<li><strong>secondDerivate(theta, n=200, h=0.001) : </strong> La meme chose mais pour la seconde derivée.</li>
-			<li><strong>generateTabPoints(func) : </strong>Permet de générer le tableau de point de la fonction entre -5 et 5 dans le but d'etre dessiné ultérieurement. La fonction prends en parametre le callback d'une fontion.</li>
+			<li><strong>generateTabPoints(func, xmin=-5, xmax=5) : </strong>Permet de générer le tableau de point de la fonction entre xmin et xmax dans le but d'etre dessiné ultérieurement. La fonction prends en parametre le callback d'une fontion.</li>
 			<li><strong>generateChart(tabPoints) : </strong> Permet de générer le graphe avec la librairie selon le tableau de point passé en parametre.</li>
 		</ul>
 		Dans la fonction principale (window.onload), on s'occupe simplement de générer le tableau de point pour chacune des fonctions puis on effctue l'affichage.
