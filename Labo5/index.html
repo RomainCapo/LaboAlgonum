@@ -23,9 +23,28 @@
         </div>
         <input type='button' value='Calculer pi' onclick="calculatePi()" class="btn btn-primary">
 		<br/>
+		<h2> Representation de PI (Bonus)</h2>
+		<a href="https://www.youtube.com/watch?v=ub5z0Qm3tzM">Repésentation de PI avec une vidéo</a>
+		<p>Voici une représentation graphique de PI avec plus de 30'000 décimales.</p>
+		<p>On peut trouver d'autre repésentation de Pi sur ce site : <a href="http://mkweb.bcgsc.ca/pi/piday.mhtml">http://mkweb.bcgsc.ca/pi/piday.mhtml</a></p>
 		<h2>Contextualisation</h2>
+		<p>Le but de ce laboratoire, est d'approximer le nombre PI avec la forumle suivante : <img src="PI.png"/></p>. 
+		<p>L'approximation de PI doit se faire avec 17 décimales.
+		Il est également demandé de calculer le temps de l'opération. Pour calculer cette approximation, nous devons utiliser la formule de simpson qui permet de calculer une intégrale.</p>
+		<h2>Methodologie</h2>
+		<p>Nous avson defini 2 fonctions : 
+		<ul>
+			<li><strong>simpson(f, a, b, n) : </strong>cette meéthode permet d'effectuer l'approximation d'une intégrale avec la méthode de simpson. Le premier parametre est la fonction à intégrer. Le parametre a est la borne inférieur. Le parametre b est la borne supérieur. Le parametre n est le nombre d'itération. La fonction retourne un tableau contenant le resultat ainsi que le temps de calcul effectué.</li>
+			<li><strong>calulatePi() : </strong>C'est la fonction qui permet d'appeler la méthode de simpson avec les différentes parametres. Dans notre cas, la fonction definit plus haut. Les bornes de 0 à 1 et 500 itérations pour l'approximation.</li>
+			On termine en affichant le resultat de l'approximation et le temps de calcul.
+		</ul>
+		</p>
 		<h2>Conclusion</h2>
+		On peut remarquer, que selon nos résultat l'approximation de PI est précise jusqu'a la 15 décimales. L'implémentation que nous avons réalisé nous semble donc correcte. De plus elle permet d'etre utilisé avec n'importe quelle fonction et n'importe quelle borne.
 		<h2>Source</h2>
+		<ul>
+			<li>Cours de M.Gobron</li>
+		</ul>
     </div>
   </body>
   <script src="script.js"></script>
