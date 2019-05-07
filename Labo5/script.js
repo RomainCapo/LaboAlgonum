@@ -1,7 +1,7 @@
-/* 
+/*
 Algorithme numérique - Labo 5
 
-Auteurs : 
+Auteurs :
 
 - Capocasale Romain
 - Moulin Vincent
@@ -14,6 +14,14 @@ Classe : INF2dlm-A
 Équipe numéro : 3
 */
 
+/**
+ * cette meéthode permet d'effectuer l'approximation d'une intégrale avec la méthode de simpson.
+ * @param  {function} f fonction a integrer
+ * @param  {integer} a borne inferieur
+ * @param  {integer} b borne supérieur
+ * @param  {integer} n nombre d'itération
+ * @return {array}   tableau contenant le resultat ainsi que le temps de calcul effectué
+ */
 function simpson(f, a, b, n)
 {
 
@@ -46,6 +54,9 @@ function simpson(f, a, b, n)
   }
 }
 
+/**
+ * permet d'appeler la méthode de simpson avec les différentes parametre et effectue l'affichage
+ */
 function calculatePi(){
   let result = simpson(function(x){
     return 4 / (1 + (Math.pow(x, 2)));
@@ -55,4 +66,3 @@ function calculatePi(){
   document.getElementById('result').innerHTML = result.resultat;
   document.getElementById('timeResult').innerHTML = result.timeResultat;
 }
-
