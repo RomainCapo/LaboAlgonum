@@ -42,7 +42,7 @@ function simpson(f, a, b, n)
 
   return {
     'resultat' : result.toFixed(17),
-    'timeResultat' : timeElapsed.toFixed(5)
+    'timeResultat' : 1000*timeElapsed.toFixed(5)
   }
 }
 
