@@ -1,3 +1,3 @@
-# Notation dossier à rendre 
+# Laboratories numerical algorithm
 
-* exemple : AN2019_Lab04_EquipeA3.zip
+Laboratories of the numerical algorithm course during the 4th semester of the bachelor's degree course
